@@ -1,0 +1,43 @@
+canvas {
+  margin: auto;
+}
+
+button {
+  background-position: center;
+  background-repeat: no-repeat;
+  border-width: 0;
+  opacity: 0.5;
+  overflow: hidden;
+  position: absolute;
+  top: 0.2em;
+  width: 48px;
+  height: 0;
+  padding-top: 48px;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.fs {
+    background-image: url("./fs_btn.png");
+    right: 3em;
+  }
+
+  &.info {
+    background-image: url("./info_btn.png");
+    right: 0.2em;
+  }
+
+  &.play {
+    background-image: url("./play_btn.png");
+    right: 0.2em;
+  }
+}
+
+#game {
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
