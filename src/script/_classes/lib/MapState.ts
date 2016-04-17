@@ -9,7 +9,7 @@ import joypad     = require("./joypad");
 /**
  * MapState class
  * 
- * @date 15-04-2016
+ * @date 16-04-2016
  */
 
 class MapState extends Phaser.State {
@@ -168,19 +168,29 @@ class MapState extends Phaser.State {
     super.update();
   }
 
-  addObject(object:any, layerName="objects") {
+  addObject(object:any, layerName?:string) {
     var type = object.type || "sprite";
-    if (this.objectTypes[type] == null) {
-      if (this.layers[layerName] == null) {
-        this.layers[layerName] = this.add.group(this.world, layerName);
-      }
-      this.objectTypes[type] = this.add.group(this.layers[layerName], type);
-    }
+    this.addObjectType(type, layerName);
     if (this.objectClasses[type] != null) {
       return this.objectTypes[type].add(new this.objectClasses[type](this, object));
     } else if (this.objectClasses["sprite"] != null) {
       return this.objectTypes[type].add(new this.objectClasses["sprite"](this, object));
     }
+  }
+
+  addObjectLayer(layerName:string) {
+    if (this.layers[layerName] == null) {
+      this.layers[layerName] = this.add.group(this.world, layerName);
+    }
+    return this.layers[layerName];
+  }
+
+  addObjectType(type:string, layerName="objects") {
+    if (this.objectTypes[type] == null) {
+      this.addObjectLayer(layerName);
+      this.objectTypes[type] = this.add.group(this.layers[layerName], type);
+    }
+    return this.objectTypes[type];
   }
 
   command(command:string, args:any):boolean {

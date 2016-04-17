@@ -4,7 +4,8 @@ import GameApp       = require("../GameApp");
 import MapState      = require("../lib/MapState");
 import MapSprite     = require("../lib/MapSprite");
 import LeadingCamera = require("../lib/LeadingCamera");
-import Player        = require("../sprites/Player");
+
+import Body          = require("../sprites/Body");
 
 /**
  * GameState class
@@ -15,7 +16,7 @@ class GameState extends MapState {
 
   constructor(gameApp:GameApp, mapName?:string, _url?:string) {
     super(gameApp, mapName, _url);
-    this.objectClasses["player"]    = Player;
+    this.objectClasses["body"] = Body;
   }
 
   preload() {
@@ -26,15 +27,19 @@ class GameState extends MapState {
     super.create();
 
     this.physics.startSystem(Phaser.Physics.ARCADE);
-    this.leadingCamera = new LeadingCamera(this.objectTypes["player"].getAt(0));
+    this.physics.arcade.gravity.y = 2048;
+    this.leadingCamera = new LeadingCamera(this.objectTypes["body"].getAt(0));
+
     this._timeInRoom = 0;
   }
 
   update() {
     super.update();
     this.leadingCamera.update();
-    this.game.physics.arcade.collide(this.objectTypes["player"], this.layers["tiles"]);
-    this.game.physics.arcade.overlap(this.objectTypes["player"], this.objectTypes["goal"], this._playerMeetsGoal, null, this);
+    this.game.physics.arcade.collide(this.objectTypes["body"], this.layers["tiles"]);
+    this.game.physics.arcade.overlap(this.objectTypes["body"], this.addObjectType("goal"), this._bodyMeetsGoal, null, this);
+    this.game.physics.arcade.overlap(this.objectTypes["bullet"], this.objectTypes["body"], this._bulletMeetsBody, null, this);
+    this.game.physics.arcade.overlap(this.objectTypes["body"], this.objectTypes["body"], this._bodyMeetsBody, null, this);
     this._timeInRoom++;
   }
 
@@ -50,13 +55,36 @@ class GameState extends MapState {
     return true;
   }
 
+  shutdown() {
+    this.physics.arcade.gravity.y = 0;
+    return super.shutdown();
+  }
+
   /**
    * Privates
    */
   private _timeInRoom=0;
 
-  private _playerMeetsGoal(player:Player, goal:MapSprite) {
-    this.gameApp.endGame();
+  private _bodyMeetsGoal(body:Body, goal:MapSprite) {
+    console.log(body, goal);
+    body.scale.set(10);
+    goal.scale.set(10);
+    // this.gameApp.endGame();
+  }
+
+  private _bulletMeetsBody(bullet:Phaser.Particles.Arcade.Emitter, body:Body) {
+    console.log("hit!");
+    if (body.alive && !body.possesed) {
+      bullet.kill();
+      body.damage(.3);
+    }
+  }
+
+  private _bodyMeetsBody(body1:Body, body2:Body) {
+    if (this.joypad.deltaB === 1 && body1.possesed && !body2.alive) {
+      body2.revive(body1.health);
+      body1.kill();
+    }
   }
 
 }
