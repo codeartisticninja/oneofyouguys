@@ -7,9 +7,9 @@
          "name":"objects",
          "objects":[
                 {
-                 "gid":1,
+                 "gid":2,
                  "height":360,
-                 "id":69,
+                 "id":62,
                  "name":"",
                  "rotation":0,
                  "type":"",
@@ -19,19 +19,17 @@
                  "y":360
                 }, 
                 {
-                 "gid":4,
+                 "gid":7,
                  "height":64,
-                 "id":71,
+                 "id":63,
                  "name":"",
                  "properties":
                     {
-                     "arguments":"#game",
                      "autofocus":true,
-                     "command":"url"
+                     "command":"back"
                     },
                  "propertytypes":
                     {
-                     "arguments":"string",
                      "autofocus":"bool",
                      "command":"string"
                     },
@@ -49,7 +47,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":73,
+ "nextobjectid":64,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

@@ -6,21 +6,26 @@ import MapSprite     = require("../lib/MapSprite");
 import LeadingCamera = require("../lib/LeadingCamera");
 
 import Body          = require("../sprites/Body");
+import Text          = require("../sprites/Text");
+import Door          = require("../sprites/Door");
 
 /**
  * GameState class
  */
 class GameState extends MapState {
   public leadingCamera:LeadingCamera;
-  public playerPosition:Phaser.Point;
 
   constructor(gameApp:GameApp, mapName?:string, _url?:string) {
     super(gameApp, mapName, _url);
     this.objectClasses["body"] = Body;
+    this.objectClasses["text"] = Text;
+    this.objectClasses["door"] = Door;
   }
 
   preload() {
     super.preload();
+    this.load.audio("body_sfx", "./assets/sfx/body.ogg");
+    this.load.image("font", "./assets/gfx/VictoriaBold.png");
   }
 
   create() {
@@ -36,10 +41,13 @@ class GameState extends MapState {
   update() {
     super.update();
     this.leadingCamera.update();
-    this.game.physics.arcade.collide(this.objectTypes["body"], this.layers["tiles"]);
-    this.game.physics.arcade.overlap(this.objectTypes["body"], this.addObjectType("goal"), this._bodyMeetsGoal, null, this);
-    this.game.physics.arcade.overlap(this.objectTypes["bullet"], this.objectTypes["body"], this._bulletMeetsBody, null, this);
-    this.game.physics.arcade.overlap(this.objectTypes["body"], this.objectTypes["body"], this._bodyMeetsBody, null, this);
+    this.game.physics.arcade.collide(this.objectType("body"), this.layers["tiles"]);
+    this.game.physics.arcade.collide(this.objectType("door"), this.layers["tiles"]);
+    this.game.physics.arcade.collide(this.objectType("goal"), this.layers["tiles"]);
+    this.game.physics.arcade.overlap(this.objectType("body"), this.objectType("goal"), this._bodyMeetsGoal, null, this);
+    this.game.physics.arcade.overlap(this.objectType("bullet"), this.objectType("body"), this._bulletMeetsBody, null, this);
+    this.game.physics.arcade.overlap(this.objectType("body"), this.objectType("body"), this._bodyMeetsBody, null, this);
+    this.game.physics.arcade.overlap(this.objectType("body"), this.objectType("door"), this._bodyMeetsDoor, null, this);
     this._timeInRoom++;
   }
 
@@ -66,24 +74,61 @@ class GameState extends MapState {
   private _timeInRoom=0;
 
   private _bodyMeetsGoal(body:Body, goal:MapSprite) {
-    console.log(body, goal);
-    body.scale.set(10);
-    goal.scale.set(10);
-    // this.gameApp.endGame();
+    if (body.possessed) {
+      if (goal.getProperty("destination")) {
+        this.gameApp.gotoRoom(goal.getProperty("destination"));
+      } else {
+        this.gameApp.endGame(true);
+      }
+    }
   }
 
-  private _bulletMeetsBody(bullet:Phaser.Particles.Arcade.Emitter, body:Body) {
-    console.log("hit!");
-    if (body.alive && !body.possesed) {
+  private _bulletMeetsBody(bullet:Phaser.Particle, body:Body) {
+    var attacker = bullet.parent["owner"];
+    if (body.alive) {
       bullet.kill();
-      body.damage(.3);
+      body.damage(.34);
+      body.sfx.play("damage");
+      
+      if (attacker.clan === "orange") {
+        attacker.traitor = body.clan !== "purple";
+      }
+      if (attacker.clan === "green") {
+        attacker.traitor = body.clan !== "orange";
+      }
+      if (attacker.clan === "purple") {
+        attacker.traitor = body.clan !== "green";
+      }
+      if (body.traitor) {
+        attacker.traitor = false;
+      }
     }
   }
 
   private _bodyMeetsBody(body1:Body, body2:Body) {
-    if (this.joypad.deltaB === 1 && body1.possesed && !body2.alive) {
-      body2.revive(body1.health);
-      body1.kill();
+    if (body1 === body2) return;
+    if (!body1.alive && !body2.alive) {
+      var dist = body1.x - body2.x + Math.random();
+      body1.x += dist / Math.abs(dist);
+    }
+    if (body1.possessed && !body2.alive) {
+      if (this.joypad.deltaB === 1) {
+        body2.revive(body1.health);
+        body1.kill(true);
+        body1.sfx.play("posses");
+      }
+      if (this.joypad.b) {
+        body2.position.copyFrom(body1.position);
+        body2.position.add(0, -body1.height);
+        body2.body.velocity.set(0);
+      }
+    }
+  }
+
+  private _bodyMeetsDoor(body:Body, door:Door) {
+    if (!body.alive) return;
+    if (body.clan !== door.clan) {
+      body.kill();
     }
   }
 

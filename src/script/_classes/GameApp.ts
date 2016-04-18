@@ -3,7 +3,6 @@
 import MapState  = require("./lib/MapState");
 import GameState = require("./states/GameState");
 
-
 /**
  * GameApp class
  */
@@ -24,11 +23,11 @@ class GameApp {
     window.addEventListener("hashchange", this._hashChange.bind(this));
 
     this.currentLevel = 0;
-    maps = [ "start", "end" ];
+    maps = [ "start", "lose", "win" ];
     for (var i in maps) {
       this.eng.state.add(maps[i] + "_state", new MapState(this, maps[i] + "_map", "assets/maps/" + maps[i] + ".json"));
     }
-    maps = [ "test" ];
+    maps = [ "tutorial", "friends", "test" ];
     for (var i in maps) {
       this.eng.state.add(maps[i] + "_room", new GameState(this, maps[i] + "_map", "assets/maps/" + maps[i] + ".json"));
     }
@@ -41,15 +40,21 @@ class GameApp {
   }
 
   gotoRoom(roomName:string) {
-    this.eng.state.start(roomName+"_room");
+    if (this.eng.state.checkState(roomName+"_room")) {
+      this.eng.state.start(roomName+"_room");
+      localStorage.setItem("shapeshift.room", roomName);
+    } else {
+      this.endGame(true);
+    }
   }
 
-  endGame() {
-    var maps = ["test" ];
-    for(var map of maps) {
-      this.eng.state.states[map+"_room"].playerPosition = null;
+  endGame(win:boolean) {
+    if (win) {
+      this.eng.state.start("win_state");
+      localStorage.removeItem("shapeshift.room");
+    } else {
+      location.assign("#lose");
     }
-    this.eng.state.start("end_state");
   }
 
   /**
@@ -99,7 +104,15 @@ class GameApp {
     var hash = location.hash.replace("#", "");
     switch (hash) {
       case "game":
+        this.gotoRoom(localStorage.getItem("shapeshift.room")||"tutorial");
+        break;
+      
+      case "test":
         this.gotoRoom("test");
+        break;
+      
+      case "lose":
+        this.eng.state.start("lose_state");
         break;
       
       default:
