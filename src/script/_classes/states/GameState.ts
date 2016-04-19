@@ -113,14 +113,7 @@ class GameState extends MapState {
     }
     if (body1.possessed && !body2.alive) {
       if (this.joypad.deltaB === 1) {
-        body2.revive(body1.health);
-        body1.kill(true);
-        body1.sfx.play("posses");
-      }
-      if (this.joypad.b) {
-        body2.position.copyFrom(body1.position);
-        body2.position.add(0, -body1.height);
-        body2.body.velocity.set(0);
+        body1.pickup(body2);
       }
     }
   }
@@ -128,7 +121,8 @@ class GameState extends MapState {
   private _bodyMeetsDoor(body:Body, door:Door) {
     if (!body.alive) return;
     if (body.clan !== door.clan) {
-      body.kill();
+      // body.kill();
+      this.physics.arcade.collide(body, door);
     }
   }
 

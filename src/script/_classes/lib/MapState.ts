@@ -9,7 +9,7 @@ import joypad     = require("./joypad");
 /**
  * MapState class
  * 
- * @date 17-04-2016
+ * @date 18-04-2016
  */
 
 class MapState extends Phaser.State {
@@ -23,6 +23,7 @@ class MapState extends Phaser.State {
   public buttonType:string;
   public focusedButton:number;
   public joypad=joypad;
+  public bgsound:Phaser.Sound;
 
   constructor(public gameApp:GameApp, public mapName?:string, private _url?:string) {
     super();
@@ -53,6 +54,7 @@ class MapState extends Phaser.State {
     if (!(this.mapName) || this.loaded[this.mapName]) {
       return;
     }
+    this.game.stage.backgroundColor = 0;
     txt = this.add.text(0, this.stage.height, "0%", {
       fill: "white"
     });
@@ -87,6 +89,9 @@ class MapState extends Phaser.State {
       if (layer.type === "imagelayer") {
         this.load.image(this.mapName + "_" + layer.name, this.mapFolder + layer.image);
       }
+    }
+    if (this.getProperty("soundKey") && this.getProperty("soundUrl")) {
+      this.load.audio(this.getProperty("soundKey"), this.mapFolder + this.getProperty("soundUrl"));
     }
   };
 
@@ -135,6 +140,10 @@ class MapState extends Phaser.State {
         break;
       }
     }
+    if (this.getProperty("soundKey")) {
+      this.bgsound = this.add.audio(this.getProperty("soundKey"), this.getProperty("soundVolume"), this.getProperty("soundLoop"));
+      this.bgsound.play();
+    }
   };
 
   update() {
@@ -166,6 +175,13 @@ class MapState extends Phaser.State {
       this.focusedButton = fb;
     }
     super.update();
+  }
+
+  shutdown() {
+    if (this.bgsound) {
+      this.bgsound.stop();
+    }
+    super.shutdown();
   }
 
   addObject(object:any, layerName?:string) {
@@ -216,6 +232,16 @@ class MapState extends Phaser.State {
         return false;
     }
     return true;
+  }
+
+  getProperty(key: string) {
+    if (this.mapData.properties) {
+      try {
+        return JSON.parse(this.mapData.properties[key]);
+      } catch (err) {
+        return this.mapData.properties[key];
+      }
+    }
   }
 }
 export = MapState;

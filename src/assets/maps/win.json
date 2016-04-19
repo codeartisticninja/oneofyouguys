@@ -51,6 +51,18 @@
         }],
  "nextobjectid":65,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "soundKey":"nitro_music",
+     "soundLoop":true,
+     "soundUrl":"..\/music\/AuditoryCheesecake_Nitro.mp3"
+    },
+ "propertytypes":
+    {
+     "soundKey":"string",
+     "soundLoop":"bool",
+     "soundUrl":"string"
+    },
  "renderorder":"right-down",
  "tileheight":32,
  "tilesets":[
@@ -71,12 +83,12 @@
          "columns":3,
          "firstgid":4,
          "image":"..\/gfx\/buttons_192x64.png",
-         "imageheight":192,
+         "imageheight":320,
          "imagewidth":576,
          "margin":0,
          "name":"buttons_192x64",
          "spacing":0,
-         "tilecount":9,
+         "tilecount":15,
          "tileheight":64,
          "tilewidth":192
         }],

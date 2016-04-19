@@ -16,6 +16,7 @@ class Body extends MapSprite {
   public traitor=false;
   public sfx:Phaser.Sound;
   public inSight:Body;
+  public carry:Body;
 
   constructor(mapState:GameState, object:any) {
     super(mapState, object);
@@ -57,7 +58,7 @@ class Body extends MapSprite {
     this.gun.maxParticleScale = .25;
     this.gun.makeParticles("swatches_32x32", 2, 10, true);
 
-    this.body.velocity.x = Math.random() * 100;
+    this.body.velocity.x = 50 + Math.random() * 50;
     joypad.start();
   }
 
@@ -69,30 +70,30 @@ class Body extends MapSprite {
     }
 
     this.inSight = null;
-    if (this.alive) {
+    if (this.alive && !this.possessed) {
       this.mapState.objectTypes["body"].forEachAlive(function(other:Body){
         if (other === this) return;
-        if (other.traitor && this.position.distance(other.position) < 400 && !this.possessed) {
-          this.trator = false;
-          if (dir < 0 && other.x > this.x) {
-            dir = 1;
-            this.scale.x = Math.abs(this.scale.x);
-            this.body.velocity.x = 128 * Math.random();
-            if (this.body.onFloor()) {
-              this.jump();
+        if (Math.abs(this.y - other.y) < 32) {
+          if (other.traitor && Math.abs(this.x - other.x) < 400) {
+            this.trator = false;
+            if (dir < 0 && other.x > this.x) {
+              dir = 1;
+              this.scale.x = Math.abs(this.scale.x);
+              this.body.velocity.x = 128 * Math.random();
+              if (this.body.onFloor()) {
+                this.jump();
+              }
+            }
+            if (dir > 0 && other.x < this.x) {
+              dir = -1;
+              this.scale.x = -Math.abs(this.scale.x);
+              this.body.velocity.x = -128 * Math.random();
+              if (this.body.onFloor()) {
+                this.jump();
+              }
             }
           }
-          if (dir > 0 && other.x < this.x) {
-            dir = -1;
-            this.scale.x = -Math.abs(this.scale.x);
-            this.body.velocity.x = -128 * Math.random();
-            if (this.body.onFloor()) {
-              this.jump();
-            }
-          }
-        }
-        if (this.position.distance(other.position) < (this.inSight?this.position.distance(this.inSight.position):200)) {
-          if (Math.abs(this.y - other.y) < 32) {
+          if (Math.abs(this.x - other.x) < (this.inSight ? Math.abs(this.x - this.inSight.x) : 200)) {
             if (dir < 0 && other.x < this.x) {
               this.inSight = other;
             }
@@ -119,6 +120,9 @@ class Body extends MapSprite {
       if (joypad.deltaA === 1) {
         this.fire();
       }
+      if (joypad.b) {
+        this.possess();
+      }
     } else if (this.alive) {
       if (this.body.onWall()) {
         if (dir > 0) {
@@ -136,15 +140,18 @@ class Body extends MapSprite {
           if (Math.random() < (5 / 60)) this.fire();
         }
         if (this.clan === "orange" && this.inSight.clan === "purple") {
-          if (Math.random() < (2 / 60)) this.fire();
+          if (Math.random() < (1 / 60)) this.fire();
         }
         if (this.clan === "green" && this.inSight.clan === "orange") {
-          if (Math.random() < (2 / 60)) this.fire();
+          if (Math.random() < (1.5 / 60)) this.fire();
         }
         if (this.clan === "purple" && this.inSight.clan === "green") {
           if (Math.random() < (2 / 60)) this.fire();
         }
       }
+    } else if (this.carry) {
+      this.position.set(this.carry.x, this.carry.y-this.carry.height);
+      this.body.velocity.set(0);
     }
 
     if (this.y > this.game.world.height*2) {
@@ -156,13 +163,13 @@ class Body extends MapSprite {
   jump() {
     if (this.jumps > 0) {
       this.jumps--;
-      this.body.velocity.y = -600;
+      this.body.velocity.y = -650;
       this.sfx.play("jump");
     }
   }
 
   fire() {
-    // this.gun.position.copyFrom(this.position);
+    if (this.carry) return this.drop();
     var dir = this.scale.x / Math.abs(this.scale.x);
     this.gun.x = this.x;
     this.gun.y = this.y - this.height/2;
@@ -173,6 +180,9 @@ class Body extends MapSprite {
 
   kill(pos=false) {
     super.kill();
+    if (this.carry && !this.carry.alive) {
+      this.drop();
+    }
     if (this.possessed && !pos) {
       setTimeout(() => {
         this.mapState.gameApp.endGame(false);
@@ -191,10 +201,34 @@ class Body extends MapSprite {
     super.revive(health);
     setTimeout(() => {
       this.possessed = true;
-    }, 100);
+    }, 1000);
     (<GameState>this.mapState).leadingCamera.subject = this;
     this.play("revive");
     return this;
+  }
+
+  drop() {
+    if (this.carry) {
+      var carry = this.carry;
+      this.carry = null;
+      carry.drop();
+    }
+  }
+
+  pickup(carry:Body) {
+    if (this.carry !== carry) {
+      this.drop();
+      this.carry = carry;
+      carry.pickup(this);
+    }
+  }
+
+  possess() {
+    if (!this.possessed) return;
+    if (!this.carry) return;
+    this.carry.revive();
+    this.kill(true);
+    this.sfx.play("posses");
   }
 
 }

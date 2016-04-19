@@ -27,7 +27,7 @@ class GameApp {
     for (var i in maps) {
       this.eng.state.add(maps[i] + "_state", new MapState(this, maps[i] + "_map", "assets/maps/" + maps[i] + ".json"));
     }
-    maps = [ "tutorial", "friends", "test" ];
+    maps = [ "tutorial", "friends", "spies", "tower", "test" ];
     for (var i in maps) {
       this.eng.state.add(maps[i] + "_room", new GameState(this, maps[i] + "_map", "assets/maps/" + maps[i] + ".json"));
     }

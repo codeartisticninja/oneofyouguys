@@ -8,20 +8,42 @@
          "objects":[
                 {
                  "gid":1,
-                 "height":360,
-                 "id":69,
+                 "height":256,
+                 "id":73,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":720,
-                 "x":40,
-                 "y":360
+                 "width":800,
+                 "x":0,
+                 "y":256
                 }, 
                 {
-                 "gid":4,
+                 "gid":11,
                  "height":64,
-                 "id":71,
+                 "id":76,
+                 "name":"",
+                 "properties":
+                    {
+                     "arguments":"tutorial_room",
+                     "command":"state"
+                    },
+                 "propertytypes":
+                    {
+                     "arguments":"string",
+                     "command":"string"
+                    },
+                 "rotation":0,
+                 "type":"button",
+                 "visible":true,
+                 "width":192,
+                 "x":128,
+                 "y":352
+                }, 
+                {
+                 "gid":14,
+                 "height":64,
+                 "id":77,
                  "name":"",
                  "properties":
                     {
@@ -39,8 +61,8 @@
                  "type":"button",
                  "visible":true,
                  "width":192,
-                 "x":304,
-                 "y":384
+                 "x":480,
+                 "y":352
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -49,34 +71,46 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":73,
+ "nextobjectid":79,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "soundKey":"fresh_music",
+     "soundLoop":true,
+     "soundUrl":"..\/music\/AuditoryCheesecake_Fresh.mp3"
+    },
+ "propertytypes":
+    {
+     "soundKey":"string",
+     "soundLoop":"bool",
+     "soundUrl":"string"
+    },
  "renderorder":"right-down",
  "tileheight":32,
  "tilesets":[
         {
          "columns":1,
          "firstgid":1,
-         "image":"..\/gfx\/titles_720x360.png",
-         "imageheight":1080,
-         "imagewidth":720,
+         "image":"..\/gfx\/titles_800x256.png",
+         "imageheight":256,
+         "imagewidth":800,
          "margin":0,
-         "name":"titles_720x360",
+         "name":"titles_800x256",
          "spacing":0,
-         "tilecount":3,
-         "tileheight":360,
-         "tilewidth":720
+         "tilecount":1,
+         "tileheight":256,
+         "tilewidth":800
         }, 
         {
          "columns":3,
-         "firstgid":4,
+         "firstgid":2,
          "image":"..\/gfx\/buttons_192x64.png",
-         "imageheight":192,
+         "imageheight":320,
          "imagewidth":576,
          "margin":0,
          "name":"buttons_192x64",
          "spacing":0,
-         "tilecount":9,
+         "tilecount":15,
          "tileheight":64,
          "tilewidth":192
         }],
