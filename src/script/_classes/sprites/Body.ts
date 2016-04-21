@@ -200,7 +200,11 @@ class Body extends MapSprite {
   revive(health=1) {
     super.revive(health);
     setTimeout(() => {
-      this.possessed = true;
+      if (this.alive) {
+        this.possessed = true;
+      } else {
+        this.mapState.gameApp.endGame(false);
+      }
     }, 1000);
     (<GameState>this.mapState).leadingCamera.subject = this;
     this.play("revive");
