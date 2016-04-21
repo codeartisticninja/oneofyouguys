@@ -53,15 +53,15 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "soundKey":"nitro_music",
-     "soundLoop":true,
-     "soundUrl":"..\/music\/AuditoryCheesecake_Nitro.mp3"
+     "soundKey":"fresh_music",
+     "soundUrl":"..\/music\/AuditoryCheesecake_Fresh.mp3",
+     "soundVolume":0.5
     },
  "propertytypes":
     {
      "soundKey":"string",
-     "soundLoop":"bool",
-     "soundUrl":"string"
+     "soundUrl":"string",
+     "soundVolume":"float"
     },
  "renderorder":"right-down",
  "tileheight":32,

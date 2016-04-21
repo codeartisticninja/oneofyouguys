@@ -1,4 +1,4 @@
-{ "backgroundcolor":"#eeeeee",
+{ "backgroundcolor":"#d0d0ef",
  "height":14,
  "layers":[
         {
@@ -75,15 +75,17 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "soundKey":"fresh_music",
-     "soundLoop":true,
-     "soundUrl":"..\/music\/AuditoryCheesecake_Fresh.mp3"
+     "musicKey":"fresh_music",
+     "musicLoop":true,
+     "musicUrl":"..\/music\/AuditoryCheesecake_Fresh.mp3",
+     "musicVolume":0.25
     },
  "propertytypes":
     {
-     "soundKey":"string",
-     "soundLoop":"bool",
-     "soundUrl":"string"
+     "musicKey":"string",
+     "musicLoop":"bool",
+     "musicUrl":"string",
+     "musicVolume":"float"
     },
  "renderorder":"right-down",
  "tileheight":32,

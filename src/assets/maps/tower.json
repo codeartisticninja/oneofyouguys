@@ -1017,15 +1017,17 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "soundKey":"ghostie_music",
+     "soundKey":"nitro_music",
      "soundLoop":true,
-     "soundUrl":"..\/music\/AuditoryCheesecake_Ghostie.mp3"
+     "soundUrl":"..\/music\/AuditoryCheesecake_Nitro.mp3",
+     "soundVolume":0.2
     },
  "propertytypes":
     {
      "soundKey":"string",
      "soundLoop":"bool",
-     "soundUrl":"string"
+     "soundUrl":"string",
+     "soundVolume":"float"
     },
  "renderorder":"right-down",
  "tileheight":32,

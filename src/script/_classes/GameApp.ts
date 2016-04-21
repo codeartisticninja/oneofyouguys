@@ -11,6 +11,7 @@ class GameApp {
   public eng:Phaser.Game;
   public container:HTMLElement;
   public currentLevel:number;
+  public music:Phaser.Sound;
 
   constructor(containerId:string, fullScreen?:boolean) {
     var maps:string[];
@@ -54,6 +55,21 @@ class GameApp {
       localStorage.removeItem("shapeshift.room");
     } else {
       location.assign("#lose");
+    }
+  }
+
+  playMusic(key:string, volume=.5, loop=true) {
+    if (!this.music) {
+      this.music = this.eng.add.sound(null);
+    }
+    if (this.music.key !== key) {
+      this.music.stop();
+      this.music.key = key;
+    }
+    this.music.volume = volume;
+    this.music.loop = loop;
+    if (!this.music.isPlaying) {
+      this.music.play();
     }
   }
 

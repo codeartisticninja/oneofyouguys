@@ -9,7 +9,7 @@ import joypad     = require("./joypad");
 /**
  * MapState class
  * 
- * @date 18-04-2016
+ * @date 21-04-2016
  */
 
 class MapState extends Phaser.State {
@@ -23,7 +23,6 @@ class MapState extends Phaser.State {
   public buttonType:string;
   public focusedButton:number;
   public joypad=joypad;
-  public bgsound:Phaser.Sound;
 
   constructor(public gameApp:GameApp, public mapName?:string, private _url?:string) {
     super();
@@ -90,8 +89,8 @@ class MapState extends Phaser.State {
         this.load.image(this.mapName + "_" + layer.name, this.mapFolder + layer.image);
       }
     }
-    if (this.getProperty("soundKey") && this.getProperty("soundUrl")) {
-      this.load.audio(this.getProperty("soundKey"), this.mapFolder + this.getProperty("soundUrl"));
+    if (this.getProperty("musicKey") && this.getProperty("musicUrl")) {
+      this.load.audio(this.getProperty("musicKey"), this.mapFolder + this.getProperty("musicUrl"));
     }
   };
 
@@ -140,9 +139,8 @@ class MapState extends Phaser.State {
         break;
       }
     }
-    if (this.getProperty("soundKey")) {
-      this.bgsound = this.add.audio(this.getProperty("soundKey"), this.getProperty("soundVolume"), this.getProperty("soundLoop"));
-      this.bgsound.play();
+    if (this.getProperty("musicKey")) {
+      this.gameApp.playMusic(this.getProperty("musicKey"), this.getProperty("musicVolume"), this.getProperty("musicLoop"));
     }
   };
 
@@ -178,9 +176,6 @@ class MapState extends Phaser.State {
   }
 
   shutdown() {
-    if (this.bgsound) {
-      this.bgsound.stop();
-    }
     super.shutdown();
   }
 
