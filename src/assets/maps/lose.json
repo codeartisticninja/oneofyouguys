@@ -49,6 +49,14 @@
         }],
  "nextobjectid":64,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "musicKey":"silence"
+    },
+ "propertytypes":
+    {
+     "musicKey":"string"
+    },
  "renderorder":"right-down",
  "tileheight":32,
  "tilesets":[

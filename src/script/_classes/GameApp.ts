@@ -73,13 +73,13 @@ class GameApp {
     if (!this.music) {
       this.music = this.eng.add.sound(null);
     }
-    if (this.music.key !== key) {
-      this.music.stop();
-      this.music.key = key;
-    }
     this.music.volume = volume;
     this.music.loop = loop;
-    if (!this.music.isPlaying) {
+    if (this.music.key !== key) {
+      this.music.stop();
+    }
+    if (this.eng.cache.checkSoundKey(key) && !this.music.isPlaying) {
+      this.music.key = key;
       this.music.play();
     }
   }

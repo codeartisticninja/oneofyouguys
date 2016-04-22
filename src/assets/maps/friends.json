@@ -333,17 +333,13 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "soundKey":"nitro_music",
-     "soundLoop":true,
-     "soundUrl":"..\/music\/AuditoryCheesecake_Nitro.mp3",
-     "soundVolume":0.2
+     "musicKey":"fresh_music",
+     "musicLoop":true
     },
  "propertytypes":
     {
-     "soundKey":"string",
-     "soundLoop":"bool",
-     "soundUrl":"string",
-     "soundVolume":"float"
+     "musicKey":"string",
+     "musicLoop":"bool"
     },
  "renderorder":"right-down",
  "tileheight":32,
