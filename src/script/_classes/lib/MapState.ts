@@ -95,7 +95,7 @@ class MapState extends Phaser.State {
       }
     }
     if (this.getProperty("musicKey") && this.getProperty("musicUrl")) {
-      this.eng.load.audio(this.getProperty("musicKey"), this.mapFolder + this.getProperty("musicUrl"));
+      this.gameApp.loadMusic(this.getProperty("musicKey"), this.mapFolder + this.getProperty("musicUrl"));
     }
   };
 

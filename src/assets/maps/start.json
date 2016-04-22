@@ -77,15 +77,13 @@
     {
      "musicKey":"fresh_music",
      "musicLoop":true,
-     "musicUrl":"..\/music\/AuditoryCheesecake_Fresh.mp3",
-     "musicVolume":0.25
+     "musicUrl":"..\/music\/AuditoryCheesecake_Fresh.mp3"
     },
  "propertytypes":
     {
      "musicKey":"string",
      "musicLoop":"bool",
-     "musicUrl":"string",
-     "musicVolume":"float"
+     "musicUrl":"string"
     },
  "renderorder":"right-down",
  "tileheight":32,

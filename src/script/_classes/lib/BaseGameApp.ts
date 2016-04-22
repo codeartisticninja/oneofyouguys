@@ -11,20 +11,19 @@ import GameState = require("../states/GameState");
 class BaseGameApp {
   public eng:Phaser.Game;
   public container:HTMLElement;
-  public currentLevel:number;
-  public music:Phaser.Sound;
+  public musicTracks = {};
+  public currentMusicTrack:string;
+  public music:HTMLMediaElement;
   public loadedAll=false;
 
   constructor(containerId:string, fullScreen?:boolean) {
     var maps:string[];
     this.container = document.getElementById(containerId);
     this.eng = new Phaser.Game(800, 450, Phaser.AUTO, containerId);
-    this.eng.antialias = false;
     if (fullScreen) {
       setTimeout(this._initFS.bind(this), 256);
     }
     window.addEventListener("hashchange", this.hashChange.bind(this));
-
   }
 
   hashChange() {
@@ -45,17 +44,25 @@ class BaseGameApp {
     }
   }
 
+  loadMusic(key:string, url:string) {
+    this.musicTracks[key] = new Audio(url);
+  }
+
   playMusic(key:string, volume=.5, loop=true) {
-    if (!this.music) {
-      this.music = this.eng.add.sound(null);
+    if (!this._addedMusicEvents) {
+      this.eng.onPause.add(this._onPause, this);
+      this.eng.onResume.add(this._onResume, this);
+      this._addedMusicEvents = true
+    };
+    if (this.music && this.currentMusicTrack !== key) {
+      this.music.pause();
+      this.music.currentTime = 0;
     }
+    this.music = this.musicTracks[this.currentMusicTrack = key];
+    if (!this.music) return;
     this.music.volume = volume;
     this.music.loop = loop;
-    if (this.music.key !== key) {
-      this.music.stop();
-    }
-    if (this.eng.cache.checkSoundKey(key) && !this.music.isPlaying) {
-      this.music.key = key;
+    if (this.music.paused) {
       this.music.play();
     }
   }
@@ -64,6 +71,7 @@ class BaseGameApp {
    * Privates
    */
   private _cursorTO:any;
+  private _addedMusicEvents=false;
 
   private _initFS() {
     var btn = document.createElement("button");
@@ -90,6 +98,14 @@ class BaseGameApp {
 
   private _hideCursor() {
     this.container.style.cursor = "none";
+  }
+
+  private _onPause() {
+    if (this.music) this.music.pause();
+  }
+
+  private _onResume() {
+    if (this.music) this.music.play();
   }
 
 }

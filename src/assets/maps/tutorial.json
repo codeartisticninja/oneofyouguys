@@ -233,12 +233,14 @@
  "properties":
     {
      "musicKey":"fresh_music",
-     "musicLoop":true
+     "musicLoop":true,
+     "musicVolume":0.2
     },
  "propertytypes":
     {
      "musicKey":"string",
-     "musicLoop":"bool"
+     "musicLoop":"bool",
+     "musicVolume":"float"
     },
  "renderorder":"right-down",
  "tileheight":32,

@@ -17,6 +17,7 @@ class GameState extends MapState {
 
   constructor(gameApp:GameApp, mapName?:string, _url?:string) {
     super(gameApp, mapName, _url);
+    this.eng.antialias = false;
     this.objectClasses["body"] = Body;
     this.objectClasses["text"] = Text;
     this.objectClasses["door"] = Door;

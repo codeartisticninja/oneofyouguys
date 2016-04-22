@@ -51,18 +51,6 @@
         }],
  "nextobjectid":65,
  "orientation":"orthogonal",
- "properties":
-    {
-     "soundKey":"fresh_music",
-     "soundUrl":"..\/music\/AuditoryCheesecake_Fresh.mp3",
-     "soundVolume":0.5
-    },
- "propertytypes":
-    {
-     "soundKey":"string",
-     "soundUrl":"string",
-     "soundVolume":"float"
-    },
  "renderorder":"right-down",
  "tileheight":32,
  "tilesets":[
