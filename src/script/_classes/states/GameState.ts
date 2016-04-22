@@ -86,6 +86,7 @@ class GameState extends MapState {
 
   private _bulletMeetsBody(bullet:Phaser.Particle, body:Body) {
     var attacker = bullet.parent["owner"];
+    if (body === attacker) return;
     if (body.alive) {
       bullet.kill();
       body.damage(.34);
