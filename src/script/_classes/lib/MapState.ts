@@ -13,8 +13,9 @@ import joypad     = require("./joypad");
  */
 
 class MapState extends Phaser.State {
+  public eng:Phaser.Game;
   public objectClasses:Object;
-  public loaded:Object;
+  public loaded:boolean;
   public mapData:any;
   public mapFolder:string;
   public layers:Object;
@@ -26,71 +27,75 @@ class MapState extends Phaser.State {
 
   constructor(public gameApp:GameApp, public mapName?:string, private _url?:string) {
     super();
+    this.eng = gameApp.eng;
     this.objectClasses = {
       "sprite": MapSprite,
       "button": MapButton
     };
-    this.loaded = {};
+    this.loaded = false;
   }
-
-  loadMap(mapName:string) {
-    this.game.state.start(this.key, true, false, mapName);
-  };
 
   init(mapName?:string) {
     if (mapName) {
       this.mapName = mapName;
+      this.loaded = false;
     }
     this.mapData = null;
-    if (this.cache.checkTilemapKey(this.mapName)) {
-      this.mapData = this.cache.getTilemapData(this.mapName).data;
+    if (this.eng.cache.checkTilemapKey(this.mapName)) {
+      this.mapData = this.eng.cache.getTilemapData(this.mapName).data;
       this._url = null;
     }
   };
 
-  preload() {
+  preload(showProgress=true) {
     var txt:Phaser.Text;
-    if (!(this.mapName) || this.loaded[this.mapName]) {
+    if (!(this.mapName) || this.loaded) {
       return;
     }
-    this.game.stage.backgroundColor = 0;
-    txt = this.add.text(0, this.stage.height, "0%", {
-      fill: "white"
-    });
-    txt.anchor.set(0, 1);
-    this.load.onFileComplete.add(function(progress:number, key:string) {
+    if (showProgress) {
+      this.eng.stage.backgroundColor = 0;
+      txt = this.eng.add.text(0, this.stage.height, "0%", {
+        fill: "white"
+      });
+      txt.anchor.set(0, 1);
+    }
+    this.eng.load.onFileComplete.add(function(progress: number, key: string, success:boolean, loadedFiles:number, totalFiles:number) {
       if (key === this.mapName) {
         this.loadAssets();
-      } else {
+      } else if (txt) {
         txt.anchor.x = progress / 100;
         txt.position.x = txt.anchor.x * txt.game.width;
         txt.text = progress + "%";
       }
+      if (loadedFiles === totalFiles) {
+        this.loaded = true;
+      }
     }, this);
     if (this._url) {
-      this.load.tilemap(this.mapName, this._url, null, Phaser.Tilemap.TILED_JSON);
+      this.eng.load.tilemap(this.mapName, this._url, null, Phaser.Tilemap.TILED_JSON);
       this._url = null;
     }
+    this.gameApp.loadAllStates();
   };
 
   loadAssets() {
     var layer:any, tileset:any, url:string;
-    if (!this.cache.checkTilemapKey(this.mapName)) {
+    if (!this.eng.cache.checkTilemapKey(this.mapName)) {
       return;
     }
-    url = this.cache.getTilemapData(this.mapName).url;
+    url = this.eng.cache.getTilemapData(this.mapName).url;
     this.mapFolder = url.substr(0, url.lastIndexOf("/") + 1);
-    this.mapData = this.cache.getTilemapData(this.mapName).data;
+    this.mapData = this.eng.cache.getTilemapData(this.mapName).data;
     for (tileset of this.mapData.tilesets) {
-      this.load.spritesheet(tileset.name, this.mapFolder + tileset.image, tileset.tilewidth, tileset.tileheight, tileset.tilecount, tileset.margin, tileset.spacing);
+      this.eng.load.spritesheet(tileset.name, this.mapFolder + tileset.image, tileset.tilewidth, tileset.tileheight, tileset.tilecount, tileset.margin, tileset.spacing);
     }
     for (layer of this.mapData.layers) {
       if (layer.type === "imagelayer") {
-        this.load.image(this.mapName + "_" + layer.name, this.mapFolder + layer.image);
+        this.eng.load.image(this.mapName + "_" + layer.name, this.mapFolder + layer.image);
       }
     }
     if (this.getProperty("musicKey") && this.getProperty("musicUrl")) {
-      this.load.audio(this.getProperty("musicKey"), this.mapFolder + this.getProperty("musicUrl"));
+      this.eng.load.audio(this.getProperty("musicKey"), this.mapFolder + this.getProperty("musicUrl"));
     }
   };
 
@@ -99,7 +104,6 @@ class MapState extends Phaser.State {
         object:any,
         tileset:any;
     if (!this.mapName) { return; }
-    this.loaded[this.mapName] = true;
     this.world.removeChildren();
     this.game.canvas.style.cursor = "inherit";
     this.game.world.setBounds(0, 0, this.stage.width, this.stage.height);

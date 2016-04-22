@@ -12,6 +12,7 @@ class GameApp {
   public container:HTMLElement;
   public currentLevel:number;
   public music:Phaser.Sound;
+  public loadedAll=false;
 
   constructor(containerId:string, fullScreen?:boolean) {
     var maps:string[];
@@ -55,6 +56,16 @@ class GameApp {
       localStorage.removeItem("shapeshift.room");
     } else {
       location.assign("#lose");
+    }
+  }
+
+  loadAllStates() {
+    if (this.loadedAll) return;
+    for (var stateName in this.eng.state.states) {
+      if (stateName !== this.eng.state.current) {
+        this.loadedAll = true;
+        this.eng.state.states[stateName].preload(false);
+      }
     }
   }
 

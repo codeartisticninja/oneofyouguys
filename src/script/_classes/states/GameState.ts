@@ -22,10 +22,11 @@ class GameState extends MapState {
     this.objectClasses["door"] = Door;
   }
 
-  preload() {
-    super.preload();
-    this.load.audio("body_sfx", "./assets/sfx/body.ogg");
-    this.load.image("font", "./assets/gfx/VictoriaBold.png");
+  preload(showProgress=true) {
+    if (this.loaded) return;
+    super.preload(showProgress);
+    this.eng.load.audio("body_sfx", "./assets/sfx/body.ogg");
+    this.eng.load.image("font", "./assets/gfx/VictoriaBold.png");
   }
 
   create() {
