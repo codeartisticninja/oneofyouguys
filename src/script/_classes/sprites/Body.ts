@@ -106,7 +106,7 @@ class Body extends MapSprite {
     }
 
     if (this.possessed) {
-      this.body.velocity.x = joypad.x * 128;
+      this.body.velocity.x = joypad.x * 256;
       if (joypad.x < 0) {
         this.scale.x = -Math.abs(this.scale.x);
       } 

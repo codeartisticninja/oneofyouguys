@@ -34,7 +34,7 @@ class GameState extends MapState {
 
     this.physics.startSystem(Phaser.Physics.ARCADE);
     this.physics.arcade.gravity.y = 2048;
-    this.leadingCamera = new LeadingCamera(this.objectTypes["body"].getAt(0));
+    this.leadingCamera = new LeadingCamera(this.objectTypes["body"].getAt(0), 160, 0, 6);
 
     this._timeInRoom = 0;
   }

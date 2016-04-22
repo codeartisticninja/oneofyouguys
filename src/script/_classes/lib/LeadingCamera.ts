@@ -16,7 +16,7 @@ class LeadingCamera {
   private _speed:Phaser.Point;
   private _direction:Phaser.Point;
 
-  constructor(public subject: Phaser.Sprite, public xSight?:number, public ySight?:number) {
+  constructor(public subject: Phaser.Sprite, public xSight?:number, public ySight?:number, public xSpeed=2, public ySpeed=xSpeed) {
     // super(subject.game, subject.game.camera.id, subject.game.camera.x, subject.game.camera.y, subject.game.camera.width, subject.game.camera.height);
     this.camera = this.subject.game.camera;
     if (this.xSight == null) {
@@ -45,7 +45,7 @@ class LeadingCamera {
       this._target.subtract((this.subject.anchor.x-.5)*this.subject.width, (this.subject.anchor.y-.5)*this.subject.height);
     } */
 
-    this._target.add(this._direction.x*2, this._direction.y*2);
+    this._target.add(this._direction.x*this.xSpeed, this._direction.y*this.ySpeed);
     this._target.clampX(this.subject.position.x-this.xSight, this.subject.position.x+this.xSight);
     this._target.clampY(this.subject.position.y-this.ySight, this.subject.position.y+this.ySight);
     this._target.clampX(this.camera.bounds.left+this.camera.width/2,  this.camera.bounds.right -this.camera.width/2);
