@@ -51,6 +51,18 @@
         }],
  "nextobjectid":65,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "musicKey":"dressforit_music",
+     "musicLoop":false,
+     "musicUrl":"..\/music\/AuditoryCheesecake_DressForIt.mp3"
+    },
+ "propertytypes":
+    {
+     "musicKey":"string",
+     "musicLoop":"bool",
+     "musicUrl":"string"
+    },
  "renderorder":"right-down",
  "tileheight":32,
  "tilesets":[
