@@ -57,7 +57,7 @@ module joypad {
               _lastLeft = joypad.left,
               _lastRight = joypad.right,
               _lastFire = joypad.fire,
-              _touchHoldTO:number,
+              _touchHoldTO:any,
               _activatingGamepad = false;
 
   export function start(devices:string[] = ["keyboard", "touch", "gamepad"], autoUpdate:boolean = false) {

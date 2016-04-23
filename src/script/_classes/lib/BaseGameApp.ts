@@ -1,11 +1,10 @@
 /// <reference path="../../_d.ts/phaser/phaser.d.ts"/>
 "use strict";
-import GameState = require("../states/GameState");
 
 /**
  * BaseGameApp class
  * 
- * @date 22-04-2016
+ * @date 23-04-2016
  */
 
 class BaseGameApp {
@@ -46,6 +45,7 @@ class BaseGameApp {
 
   loadMusic(key:string, url:string) {
     this.musicTracks[key] = new Audio(url);
+    this.musicTracks[key].preload = "auto";
   }
 
   playMusic(key:string, volume=.5, loop=true) {

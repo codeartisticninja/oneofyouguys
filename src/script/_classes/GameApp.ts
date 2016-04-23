@@ -3,12 +3,17 @@
 import BaseGameApp  = require("./lib/BaseGameApp");
 import MapState = require("./lib/MapState");
 import GameState = require("./states/GameState");
+import StorageFile = require("./lib/StorageFile");
+
 
 /**
  * GameApp class
  */
 
 class GameApp extends BaseGameApp {
+  public saveFile = new StorageFile("save.json");
+  public prefs = new StorageFile("/prefs.json");
+
   constructor(containerId: string, fullScreen?: boolean) {
     super(containerId, fullScreen);
     var maps = [ "start", "lose", "win" ];
@@ -27,7 +32,7 @@ class GameApp extends BaseGameApp {
     var hash = location.hash.replace("#", "");
     switch (hash) {
       case "game":
-        this.gotoRoom(localStorage.getItem("shapeshift.room") || "tutorial");
+        this.gotoRoom(this.saveFile.get("room") || "tutorial");
         break;
 
       case "test":
@@ -47,7 +52,7 @@ class GameApp extends BaseGameApp {
   gotoRoom(roomName: string) {
     if (this.eng.state.checkState(roomName + "_room")) {
       this.eng.state.start(roomName + "_room");
-      localStorage.setItem("shapeshift.room", roomName);
+      this.saveFile.set("room", roomName);
     } else {
       this.endGame(true);
     }
@@ -56,7 +61,7 @@ class GameApp extends BaseGameApp {
   endGame(win: boolean) {
     if (win) {
       this.eng.state.start("win_state");
-      localStorage.removeItem("shapeshift.room");
+      this.saveFile.set("room", null);
     } else {
       location.assign("#lose");
     }
