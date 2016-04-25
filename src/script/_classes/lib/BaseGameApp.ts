@@ -1,10 +1,11 @@
 /// <reference path="../../_d.ts/phaser/phaser.d.ts"/>
 "use strict";
+import StorageFile = require("./StorageFile");
 
 /**
  * BaseGameApp class
  * 
- * @date 23-04-2016
+ * @date 24-04-2016
  */
 
 class BaseGameApp {
@@ -14,6 +15,9 @@ class BaseGameApp {
   public currentMusicTrack:string;
   public music:HTMLMediaElement;
   public loadedAll=false;
+  public saveFile = new StorageFile("save.json");
+  public prefs = new StorageFile("/prefs.json");
+
 
   constructor(containerId:string, fullScreen?:boolean) {
     var maps:string[];
@@ -23,6 +27,24 @@ class BaseGameApp {
       setTimeout(this._initFS.bind(this), 256);
     }
     window.addEventListener("hashchange", this.hashChange.bind(this));
+
+    this.prefs.onSet("music.enabled", (key:string, value:boolean) => {
+      if (this.music) {
+        if (value) {
+          this.music.muted = false;
+          this.music.play();
+        } else {
+          this.music.pause();
+        }
+      }
+    });
+    this.prefs.onSet("music.volume", (key:string, value:number) => {
+      if (this.music) {
+        this.music.volume = value;
+      }
+    });
+    this.prefs.set("music.enabled", true, true);
+    this.prefs.set("music.volume", 0.5, true);
   }
 
   hashChange() {
@@ -45,10 +67,29 @@ class BaseGameApp {
 
   loadMusic(key:string, url:string) {
     this.musicTracks[key] = new Audio(url);
-    this.musicTracks[key].preload = "auto";
+    if (!this.prefs.get("music.enabled")) {
+      this.musicTracks[key].preload = "none";
+      this.musicTracks[key].muted = true;
+    }
+    this.musicTracks[key].addEventListener("stalled", () => {
+      console.log("stalled!");
+      if (this.musicTracks[key].currentTime > 1) {
+        this.musicTracks[key].muted = true;
+      }
+    });
+    this.musicTracks[key].addEventListener("canplaythrough", () => {
+      console.log("canplaythrough!");
+      this.musicTracks[key].muted = false;
+    });
+    this.musicTracks[key].addEventListener("error", () => {
+      console.log("error!");
+      if (this.musicTracks[key].src.indexOf(".ogg") !== -1) {
+        this.musicTracks[key].src = this.musicTracks[key].src.replace(".ogg", ".mp3");
+      }
+    });
   }
 
-  playMusic(key:string, volume=.5, loop=true) {
+  playMusic(key:string, loop=true, volume=this.prefs.get("music.volume")) {
     if (!this._addedMusicEvents) {
       this.eng.onPause.add(this._onPause, this);
       this.eng.onResume.add(this._onResume, this);
@@ -59,11 +100,18 @@ class BaseGameApp {
       this.music.currentTime = 0;
     }
     this.music = this.musicTracks[this.currentMusicTrack = key];
+    if (!this.prefs.get("music.enabled")) return;
     if (!this.music) return;
     this.music.volume = volume;
     this.music.loop = loop;
     if (this.music.paused) {
-      this.music.play();
+      if(!this.music.play()) {
+        var cb = () => {
+          this.music.play();
+          document.body.removeEventListener("touchstart", cb);
+        };
+        document.body.addEventListener("touchstart", cb);
+      }
     }
   }
 
@@ -105,7 +153,7 @@ class BaseGameApp {
   }
 
   private _onResume() {
-    if (this.music) this.music.play();
+    if (this.music && this.prefs.get("music.enabled")) this.music.play();
   }
 
 }

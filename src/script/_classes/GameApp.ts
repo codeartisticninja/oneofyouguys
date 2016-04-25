@@ -3,17 +3,12 @@
 import BaseGameApp  = require("./lib/BaseGameApp");
 import MapState = require("./lib/MapState");
 import GameState = require("./states/GameState");
-import StorageFile = require("./lib/StorageFile");
-
 
 /**
  * GameApp class
  */
 
 class GameApp extends BaseGameApp {
-  public saveFile = new StorageFile("save.json");
-  public prefs = new StorageFile("/prefs.json");
-
   constructor(containerId: string, fullScreen?: boolean) {
     super(containerId, fullScreen);
     var maps = [ "start", "lose", "win" ];

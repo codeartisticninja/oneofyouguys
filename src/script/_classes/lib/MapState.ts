@@ -9,7 +9,7 @@ import joypad     = require("./joypad");
 /**
  * MapState class
  * 
- * @date 21-04-2016
+ * @date 24-04-2016
  */
 
 class MapState extends Phaser.State {
@@ -144,7 +144,7 @@ class MapState extends Phaser.State {
       }
     }
     if (this.getProperty("musicKey")) {
-      this.gameApp.playMusic(this.getProperty("musicKey"), this.getProperty("musicVolume"), this.getProperty("musicLoop"));
+      this.gameApp.playMusic(this.getProperty("musicKey"), this.getProperty("musicLoop", true));
     }
   };
 
@@ -233,12 +233,16 @@ class MapState extends Phaser.State {
     return true;
   }
 
-  getProperty(key: string) {
+  getProperty(key: string, ifUndefined?:any) {
     if (this.mapData.properties) {
-      try {
-        return JSON.parse(this.mapData.properties[key]);
-      } catch (err) {
-        return this.mapData.properties[key];
+      if (this.mapData.properties[key] === undefined) {
+        return ifUndefined;
+      } else {
+        try {
+          return JSON.parse(this.mapData.properties[key]);
+        } catch (err) {
+          return this.mapData.properties[key];
+        }
       }
     }
   }
