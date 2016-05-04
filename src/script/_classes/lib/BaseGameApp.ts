@@ -5,7 +5,7 @@ import StorageFile = require("./StorageFile");
 /**
  * BaseGameApp class
  * 
- * @date 24-04-2016
+ * @date 04-05-2016
  */
 
 class BaseGameApp {
@@ -28,19 +28,15 @@ class BaseGameApp {
     }
     window.addEventListener("hashchange", this.hashChange.bind(this));
 
-    this.prefs.onSet("music.enabled", (key:string, value:boolean) => {
+    this.prefs.onSet("music", () => {
       if (this.music) {
-        if (value) {
+        if (this.prefs.get("music.enabled") && this.prefs.get("music.volume")) {
           this.music.muted = false;
+          this.music.volume = this.prefs.get("music.volume");
           this.music.play();
         } else {
           this.music.pause();
         }
-      }
-    });
-    this.prefs.onSet("music.volume", (key:string, value:number) => {
-      if (this.music) {
-        this.music.volume = value;
       }
     });
     this.prefs.set("music.enabled", true, true);
@@ -72,17 +68,14 @@ class BaseGameApp {
       this.musicTracks[key].muted = true;
     }
     this.musicTracks[key].addEventListener("stalled", () => {
-      console.log("stalled!");
       if (this.musicTracks[key].currentTime > 1) {
         this.musicTracks[key].muted = true;
       }
     });
     this.musicTracks[key].addEventListener("canplaythrough", () => {
-      console.log("canplaythrough!");
       this.musicTracks[key].muted = false;
     });
     this.musicTracks[key].addEventListener("error", () => {
-      console.log("error!");
       if (this.musicTracks[key].src.indexOf(".ogg") !== -1) {
         this.musicTracks[key].src = this.musicTracks[key].src.replace(".ogg", ".mp3");
       }
@@ -100,8 +93,9 @@ class BaseGameApp {
       this.music.currentTime = 0;
     }
     this.music = this.musicTracks[this.currentMusicTrack = key];
-    if (!this.prefs.get("music.enabled")) return;
     if (!this.music) return;
+    if (!this.prefs.get("music.enabled")) return;
+    if (!volume) return;
     this.music.volume = volume;
     this.music.loop = loop;
     if (this.music.paused) {
