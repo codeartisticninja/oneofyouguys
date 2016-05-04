@@ -3,7 +3,7 @@
 /*
   joypad module for unified game controls
 
-  @date 30-03-2016
+  @date 04-05-2016
  */
 
 interface JoyTouch {
@@ -232,9 +232,10 @@ module joypad {
     Keyboard
    */
   function _onKeyDown(e:KeyboardEvent) {
-    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
+    if (e.altKey || e.ctrlKey || e.metaKey) {
       return;
     }
+    var speed = e.shiftKey ? 0.45 : 1;
     localStorage.setItem("joypad.device", joypad.device = "keyboard");
     switch (_keyMap[e.keyCode]) {
       case "left":
@@ -264,8 +265,8 @@ module joypad {
       default:
         console.log("keyCode:", e.keyCode, e);
     }
-    joypad.x = Math.round(joypad.x);
-    joypad.y = Math.round(joypad.y);
+    joypad.x = Math.round(joypad.x) * speed;
+    joypad.y = Math.round(joypad.y) * speed;
   }
 
   function _onKeyUp(e:KeyboardEvent) {
