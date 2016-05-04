@@ -5,13 +5,14 @@ import url = require("url");
 /**
  * StorageFile class
  * 
- * @date 24-04-2016
+ * @date 04-05-2016
  */
 
 class StorageFile {
   public url:string;
   public storage:Storage;
   private _onSetListeners = {};
+  private _onSetValues = {};
 
   constructor(uri:string, public data={}) {
     this.url = url.resolve(location.pathname, uri);
@@ -38,7 +39,8 @@ class StorageFile {
     if (data !== undefined) {
       this.data = data;
     }
-    return this.storage.setItem(this.url, JSON.stringify(this.data));
+    this.storage.setItem(this.url, JSON.stringify(this.data));
+    this._runListeners();
   }
 
   delete(data={}) {
@@ -51,7 +53,7 @@ class StorageFile {
     var keys = key.split(".");
     var data = this.data;
     while (keys.length > 1) {
-      if (!data) return data;
+      if (!data[keys[0]]) return undefined;
       data = data[keys.shift()];
     }
     return data[keys[0]];
@@ -67,17 +69,13 @@ class StorageFile {
     if (data[keys[0]] === value) return;
     if (ifUndefined && (data[keys[0]] !== undefined)) return;
     data[keys[0]] = value;
-    if (this._onSetListeners[key]) {
-      for (var listener of this._onSetListeners[key]) {
-        listener(key, value);
-      }
-    }
-    return this.save();
+    this.save();
   }
 
   onSet(key:string, callback:Function) {
     if (this._onSetListeners[key] == null) this._onSetListeners[key] = [];
     this._onSetListeners[key].push(callback);
+    this._onSetValues[key] = JSON.stringify(this.get(key));
   }
 
   list() {
@@ -102,6 +100,20 @@ class StorageFile {
 
   open(uri:string) {
     return new StorageFile(url.resolve(this.url, uri));
+  }
+
+  _runListeners() {
+    var key:string, value:any, JSONvalue:string, listener:Function;
+    for (key in this._onSetListeners) {
+      value = this.get(key);
+      JSONvalue = JSON.stringify(value);
+      if (this._onSetValues[key] !== JSONvalue) {
+        for (listener of this._onSetListeners[key]) {
+          listener(key, value);
+        }
+        this._onSetValues[key] = JSONvalue;
+      }
+    }
   }
 }
 export = StorageFile;
