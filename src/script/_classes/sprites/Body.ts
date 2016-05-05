@@ -17,6 +17,7 @@ class Body extends MapSprite {
   public sfx:Phaser.Sound;
   public inSight:Body;
   public carry:Body;
+  public grasp:Body;
 
   constructor(mapState:GameState, object:any) {
     super(mapState, object);
@@ -121,6 +122,9 @@ class Body extends MapSprite {
         this.fire();
       }
       if (joypad.b) {
+        if (this.grasp) {
+          this.pickup();
+        }
         this.possess();
       }
     } else if (this.alive) {
@@ -158,6 +162,7 @@ class Body extends MapSprite {
       this.y = 0;
       this.body.velocity.y = -100 * Math.random();
     }
+    this.grasp = null;
   }
 
   jump() {
@@ -194,6 +199,7 @@ class Body extends MapSprite {
     this.traitor = false;
     this.play("die");
     this.body.velocity.set(0);
+    this.body.setSize(24, 12);
     return this;
   }
 
@@ -208,6 +214,7 @@ class Body extends MapSprite {
     }, 1000);
     (<GameState>this.mapState).leadingCamera.subject = this;
     this.play("revive");
+    this.body.setSize(16, 32);
     return this;
   }
 
@@ -219,7 +226,7 @@ class Body extends MapSprite {
     }
   }
 
-  pickup(carry:Body) {
+  pickup(carry=this.grasp) {
     if (this.carry !== carry) {
       this.drop();
       this.carry = carry;

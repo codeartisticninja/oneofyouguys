@@ -110,14 +110,13 @@ class GameState extends MapState {
 
   private _bodyMeetsBody(body1:Body, body2:Body) {
     if (body1 === body2) return;
+    if (body1.carry === body2) return;
     if (!body1.alive && !body2.alive) {
       var dist = body1.x - body2.x + Math.random();
       body1.x += dist / Math.abs(dist);
     }
     if (body1.possessed && !body2.alive) {
-      if (this.joypad.deltaB === 1) {
-        body1.pickup(body2);
-      }
+      body1.grasp = body2;
     }
   }
 
