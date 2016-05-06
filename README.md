@@ -4,8 +4,12 @@ I'm one of you guys now
 
 Compile and run
 ---------------
+Download and install [node.js](https://nodejs.org/en/).
+
 Open terminal and type
 
-    $ npm install && npm start
+    $ cd path/to/oneofyouguys/
+    $ npm install
+    $ npm start
 
 Open your browser to http://localhost:8000/
