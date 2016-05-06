@@ -5,6 +5,7 @@
   "scripts": {
     "deploy": "jake deploy",
     "prepublish": "jake",
+    "start": "statify -d ./build/",
     "watch": "jake watch"
   },
   "devDependencies": {
@@ -20,5 +21,8 @@
     "livereload": "^0.4.0",
     "marked": "^0.3.5",
     "tsify": "^0.13.2"
+  },
+  "dependencies": {
+    "statify": "^2.0.1"
   }
 }

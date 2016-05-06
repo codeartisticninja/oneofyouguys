@@ -18,7 +18,7 @@ var fs          = require("fs"),
  * Jakefile.js
  * For building web apps
  *
- * @date 11-03-2016
+ * @date 06-05-2016
  */
 var srcDir        = "./src/",
     outDir        = "./build/",
@@ -42,6 +42,8 @@ task("watch", function(){
 
   reloadServer = livereload.createServer();
   reloadServer.watch(outDir);
+
+  jake.exec("statify", { printStderr: true });
 });
 
 task("deploy", [ "default" ], {async:true}, function(){
@@ -72,6 +74,7 @@ task("deploy", [ "default" ], {async:true}, function(){
       upload();
     } else {
       ftp.end();
+      console.log("...dONE!");
       complete();
     }
   };
@@ -89,6 +92,7 @@ task("clean", function() {
   excludeIgnoredFiles(files).forEach(function(file){
     jake.rmRf(file);
   });
+  console.log("...dONE!");
 });
 
 namespace("html", function(){
@@ -121,6 +125,7 @@ namespace("html", function(){
       jake.mkdirP(path.dirname(outFile));
       fs.writeFileSync(outFile, output);
     });
+    console.log("...dONE!");
   });
   task("md", function(){
     console.log("\nCompiling Markdown...");
@@ -137,6 +142,7 @@ namespace("html", function(){
       jake.mkdirP(path.dirname(outFile));
       fs.writeFileSync(outFile, output);
     });
+    console.log("...dONE!");
   });
 });
 
@@ -158,7 +164,7 @@ namespace("css", function(){
           if (!debug) { output = cssmin(output); }
           jake.mkdirP(path.dirname(outFile));
           fs.writeFileSync(outFile, output);
-          if (--filesLeft === 0) { complete(); }
+          if (--filesLeft === 0) { console.log("...dONE!"); complete(); }
         },
         function(err){
           fail("\u0007LESS compilation failed!\t" + err);
@@ -194,7 +200,7 @@ namespace("js", function(){
             if (!debug) { output = jsmin(output); }
             jake.mkdirP(path.dirname(outFile));
             fs.writeFileSync(outFile, output);
-            if (--filesLeft <= 0) { complete(); }
+            if (--filesLeft <= 0) { console.log("...dONE!"); complete(); }
           }
         });
 
@@ -219,6 +225,7 @@ namespace("static", function(){
       jake.mkdirP(path.dirname(outFile));
       fs.writeFileSync(outFile, output);
     });
+    console.log("...dONE!");
   });
 
   task("all", function(){
@@ -232,6 +239,7 @@ namespace("static", function(){
         jake.cpR(inFile, outFile);
       }
     });
+    console.log("...dONE!");
   });
 });
 
