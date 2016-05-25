@@ -1,5 +1,6 @@
 {
   "baseUrl": "./",
   "siteName": "I'm one of you guys now",
+  "description": "My first game release and entry for the Ludum Dare 35.",
   "title": "Untitled"
 }
