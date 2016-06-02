@@ -1,11 +1,11 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.6 - 18th February 2015
+// Type definitions for Phaser 2.4.8 - 16th May 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
-    export = Phaser;
+  export = Phaser;
 }
 
 declare class Phaser {
@@ -580,17 +580,27 @@ declare module Phaser {
         static FOLLOW_PLATFORMER: number;
         static FOLLOW_TOPDOWN: number;
         static FOLLOW_TOPDOWN_TIGHT: number;
+        static SHAKE_BOTH: number;
+        static SHAKE_HORIZONTAL: number;
+        static SHAKE_VERTICAL: number;
+        static ENABLE_FX: number;
 
         atLimit: { x: boolean; y: boolean; };
         bounds: Phaser.Rectangle;
         deadzone: Phaser.Rectangle;
         displayObject: PIXI.DisplayObject;
         id: number;
+        fx: Phaser.Graphics;
         game: Phaser.Game;
         height: number;
+        lerp: Phaser.Point;
         position: Phaser.Point;
         roundPx: boolean;
         scale: Phaser.Point;
+        shakeIntensity: number;
+        onFadeComplete: Phaser.Signal;
+        onFlashComplete: Phaser.Signal;
+        onShakeComplete: Phaser.Signal;
         target: Phaser.Sprite;
         totalInView: number;
         view: Phaser.Rectangle;
@@ -601,13 +611,17 @@ declare module Phaser {
         y: number;
 
         checkBounds(): void;
+        fade(color?: number, duration?: number, force?: boolean): boolean;
+        flash(color?: number, duration?: number, force?: boolean): boolean;
         focusOn(displayObject: PIXI.DisplayObject): void;
         focusOnXY(x: number, y: number): void;
-        follow(target: Phaser.Sprite, style?: number): void;
+        follow(target: Phaser.Sprite, style?: number, lerpX?: number, lerpY?: number): void;
         reset(): void;
+        resetFX(): void;
         setBoundsToWorld(): void;
         setPosition(x: number, y: number): void;
         setSize(width: number, height: number): void;
+        shake(intensity?: number, duration?: number, force?: boolean, direction?: number, shakeBounds?: boolean): boolean;
         unfollow(): void;
         update(): void;
 
@@ -1314,6 +1328,7 @@ declare module Phaser {
         parent?: any;
         transparent?: boolean;
         antialias?: boolean;
+        resolution?: number;
         preserveDrawingBuffer?: boolean;
         physicsConfig?: any;
         seed?: string;
@@ -1335,6 +1350,7 @@ declare module Phaser {
         config: IGameConfig;
         context: CanvasRenderingContext2D;
         count: number;
+        create: Phaser.Create;
         debug: Phaser.Utils.Debug;
         device: Phaser.Device;
         forceSingleUpdate: boolean;
@@ -1671,7 +1687,7 @@ declare module Phaser {
         addToHash(child: PIXI.DisplayObject): boolean;
         bringToTop(child: any): any;
         callAll(method: string, context: any, ...parameters: any[]): void;
-        callAllExists(callback: Function, existsValue: boolean, ...parameters: any[]): void;
+        callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
         callbackFromArray(child: any, callback: Function, length: number): void;
         checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
         checkProperty(child: any, key: string[], value: any, force?: boolean): boolean;
@@ -1689,6 +1705,7 @@ declare module Phaser {
         filter(predicate: Function, checkExists?: boolean): ArraySet;
         getAt(index: number): PIXI.DisplayObject | number;
         getBottom(): any;
+        getByName(name: string): any;
         getFirstAlive(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
         getFirstDead(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
         getFirstExists(exists: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
@@ -2279,6 +2296,7 @@ declare module Phaser {
 
         static intersectsPoints(a: Phaser.Point, b: Phaser.Point, e: Phaser.Point, f: Phaser.Point, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
         static intersects(a: Phaser.Line, b: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
+        static intersectsRectangle(line: Phaser.Line, rect: Phaser.Rectangle): boolean;
         static reflect(a: Phaser.Line, b: Phaser.Line): number;
 
         centerOn(x: number, y: number): Phaser.Line;
@@ -2828,14 +2846,14 @@ declare module Phaser {
             accelerateToObject(displayObject: any, destination: any, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
             accelerateToPointer(displayObject: any, pointer?: Phaser.Pointer, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
             accelerateToXY(displayObject: any, x: number, y: number, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
-            angleBetween(source: any, target: any): number;
-            angleToPointer(displayObject: any, pointer?: Phaser.Pointer): number;
-            angleToXY(displayObject: any, x: number, y: number): number;
-            collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
+            angleBetween(source: any, target: any, world?: boolean): number;
+            angleToPointer(displayObject: any, pointer?: Phaser.Pointer, world?: boolean): number;
+            angleToXY(displayObject: any, x: number, y: number, world?: boolean): number;
+            collide(object1: any, object2?: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
             computeVelocity(axis: number, body: Phaser.Physics.Arcade.Body, velocity: number, acceleration: number, drag: number, max?: number): number;
-            distanceBetween(source: any, target: any): number;
-            distanceToPointer(displayObject: any, pointer?: Phaser.Pointer): number;
-            distanceToXY(displayObject: any, x: number, y: number): number;
+            distanceBetween(source: any, target: any, world?: boolean): number;
+            distanceToPointer(displayObject: any, pointer?: Phaser.Pointer, world?: boolean): number;
+            distanceToXY(displayObject: any, x: number, y: number, world?: boolean): number;
             enable(object: any, children?: Boolean): void;
             enableBody(object: any): void;
             getObjectsAtLocation(x: number, y: number, group: Phaser.Group, callback?: (callbackArg: any, object: any) => void, callbackContext?: any, callbackArg?: any): Sprite[];
@@ -2920,6 +2938,7 @@ declare module Phaser {
                 type: number;
                 wasTouching: FaceChoices;
                 width: number;
+                worldBounce: Phaser.Point;
                 velocity: Phaser.Point;
                 x: number;
                 y: number;
@@ -3351,6 +3370,8 @@ declare module Phaser {
                 setZeroVelocity(): void;
                 toLocalFrame(out: number[], worldPoint: number[]): void;
                 thrust(speed: number): void;
+                thrustLeft(speed: number): void;
+                thrustRight(speed: number): void;
                 toWorldFrame(out: number[], localPoint: number[]): void;
                 updateCollisionMask(shape?: p2.Shape): void;
 
@@ -3507,6 +3528,13 @@ declare module Phaser {
     }
 
     module Plugin {
+
+        class SaveCPU extends Phaser.Plugin {
+
+            renderOnFPS: number;
+            renderOnPointerChange: boolean;
+            forceRender(): void;
+        }
 
         class AStar extends Phaser.Plugin {
 
@@ -4348,6 +4376,7 @@ declare module Phaser {
         context: any;
         game: Phaser.Game;
         mute: boolean;
+        muteOnPause: boolean;
         noAudio: boolean;
         onSoundDecode: Phaser.Signal;
         onVolumeChange: Phaser.Signal;
@@ -4702,6 +4731,7 @@ declare module Phaser {
         strokeThickness?: number;
         wordWrap?: boolean;
         wordWrapWidth?: number;
+        maxLines?: number;
         shadowOffsetX?: number;
         shadowOffsetY?: number;
         shadowColor?: string;
@@ -4799,7 +4829,7 @@ declare module Phaser {
         preUpdate(): void;
         renderTabLine(line: string, x: number, y: number, fill?: boolean): void;
         setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.Text;
-        setStyle(style?: PhaserTextStyle): Phaser.Text;
+        setStyle(style?: PhaserTextStyle, update?: boolean): Phaser.Text;
         setText(text: string): Phaser.Text;
         setTextBounds(x?: number, y?: number, width?: number, height?: number): Phaser.Text;
         update(): void;
@@ -5372,7 +5402,7 @@ declare module Phaser {
             inputInfo(x: number, y: number, color?: string): void;
             lineInfo(line: Phaser.Line, x: number, y: number, color?: string): void;
             key(key: Phaser.Key, x?: number, y?: number, color?: string): void;
-            line(): void;
+            line(...args: string[]): void;
             preUpdate(): void;
             pixel(x: number, y: number, color?: string, size?: number): void;
             pointer(pointer: Phaser.Pointer, hideIfUp?: boolean, downColor?: string, upColor?: string, color?: string): void;
@@ -5430,3 +5460,4 @@ declare module Phaser {
     }
 
 }
+

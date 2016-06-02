@@ -36,7 +36,7 @@ class Body extends MapSprite {
     this.moveAnchor(.5, 1);
     this.possessed = !!(this.getProperty("possessed"));
 
-    this.body.setSize(16, 32);
+    this.body.setSize(16, 32, 8, 0);
     this.scale.set(2);
     this.body.bounce.set(.1);
 
@@ -199,7 +199,7 @@ class Body extends MapSprite {
     this.traitor = false;
     this.play("die");
     this.body.velocity.set(0);
-    this.body.setSize(24, 12);
+    this.body.setSize(32, 10, 0, 22);
     return this;
   }
 
@@ -214,7 +214,7 @@ class Body extends MapSprite {
     }, 1000);
     (<GameState>this.mapState).leadingCamera.subject = this;
     this.play("revive");
-    this.body.setSize(16, 32);
+    this.body.setSize(16, 32, 8, 0);
     return this;
   }
 
