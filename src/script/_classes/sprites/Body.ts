@@ -208,11 +208,11 @@ class Body extends MapSprite {
     setTimeout(() => {
       if (this.alive) {
         this.possessed = true;
+        (<GameState>this.mapState).leadingCamera.follow(this);
       } else {
         this.mapState.gameApp.endGame(false);
       }
     }, 1000);
-    (<GameState>this.mapState).leadingCamera.subject = this;
     this.play("revive");
     this.body.setSize(16, 32, 8, 0);
     return this;
@@ -237,6 +237,7 @@ class Body extends MapSprite {
   possess() {
     if (!this.possessed) return;
     if (!this.carry) return;
+    (<GameState>this.mapState).leadingCamera.follow(null);
     this.carry.revive();
     this.kill(true);
     this.sfx.play("posses");
