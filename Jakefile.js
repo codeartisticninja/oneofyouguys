@@ -4,7 +4,7 @@ var fs          = require("fs"),
     path        = require("path"),
     Watcher     = require("file-watch"),
     livereload  = require("livereload"),
-    handlebars  = require("handlebars"),
+    mustache    = require("mustache"),
     markdown    = require("marked"),
     htmlmin     = require("htmlmin"),
     less        = require("less"),
@@ -18,7 +18,7 @@ var fs          = require("fs"),
  * Jakefile.js
  * For building web apps
  *
- * @date 06-05-2016
+ * @date 26-05-2016
  */
 var srcDir        = "./src/",
     outDir        = "./build/",
@@ -28,17 +28,17 @@ var srcDir        = "./src/",
     reloadServer,
     watchThrottle = {};
 
-task("default", [ "clean", "html:hbs", "html:md", "css:less", "js:ts", "static:json", "static:all" ]);
+task("default", [ "clean", "html:mustache", "html:md", "css:less", "js:ts", "static:json", "static:all" ]);
 
 task("watch", function(){
   console.log("\nWatching...");
   debug = true;
-  startWatching(".hbs",   "html:hbs");
-  startWatching(".md",    "html:md");
-  startWatching(".less",  "css:less");
-  startWatching(".ts",    "js:ts");
-  startWatching(".json",  "static:json");
-  startWatching("",       "static:all");
+  startWatching(".mustache",  "html:mustache");
+  startWatching(".md",        "html:md");
+  startWatching(".less",      "css:less");
+  startWatching(".ts",        "js:ts");
+  startWatching(".json",      "static:json");
+  startWatching("",           "static:all");
 
   reloadServer = livereload.createServer();
   reloadServer.watch(outDir);
@@ -54,7 +54,7 @@ task("deploy", [ "default" ], {async:true}, function(){
       ftpDir = config.rootPath + config.urlPath,
       files = new jake.FileList();
 
-  files.include([ localDir, localDir+"**/*" ]);
+  files.include([ localDir, localDir+"**/*", localDir+"**/.*" ]);
   files = excludeIgnoredFiles(files).sort();
   var upload = function() {
     var localFile = files.shift(),
@@ -89,6 +89,7 @@ task("clean", function() {
   jake.mkdirP(outDir);
   var files = new jake.FileList();
   files.include(outDir+"*");
+  files.include(outDir+".*");
   excludeIgnoredFiles(files).forEach(function(file){
     jake.rmRf(file);
   });
@@ -96,10 +97,18 @@ task("clean", function() {
 });
 
 namespace("html", function(){
-  var data = {};
+  var data = {}, partials = {};
   try {
     data = require(srcDir+"data.json");
+    data.block = function() {
+      return function(src, render) {
+        var name = src.split("=")[0].trim();
+        src = src.substr(src.indexOf("=")+1);
+        data[name] = render(src);
+      };
+    }
     data.pkg = require("./package.json");
+    data.php = require("./phustache.js");
     data.deploy = require("./.deploy.json");
     data.baseUrl = data.deploy.rootUrl + data.deploy.urlPath;
   } catch(e) {}
@@ -107,19 +116,21 @@ namespace("html", function(){
     collapseWhitespace: true
   };
 
-  task("hbs", function(){
-    console.log("\nCompiling Handlebars...");
-    fileTypeList(".hbs", true).forEach(function(inFile){
-      var basename = path.basename(inFile, ".hbs");
+  task("mustache", function(){
+    console.log("\nCompiling Mustache...");
+    fileTypeList(".mustache", true).forEach(function(inFile){
+      var basename = path.basename(inFile, ".mustache");
       console.log(inFile, "#>", basename);
-      handlebars.registerPartial(basename, ""+fs.readFileSync(inFile));
+      partials[basename] = data.php.replaceVars(""+fs.readFileSync(inFile));
     });
-    fileTypeList(".hbs").forEach(function(inFile){
+    fileTypeList(".mustache").forEach(function(inFile){
       var outFile = outputFile(inFile, ".html"),
           output  = ""+fs.readFileSync(inFile);
       console.log(inFile, "->", outFile);
 
-      output = handlebars.compile(output)(data);
+      setActive(outFile, data);
+      output = data.php.replaceVars(output);
+      output = mustache.render(output, data, partials);
 
       if (!debug) { output = htmlmin(output, htmlmin_opts); }
       jake.mkdirP(path.dirname(outFile));
@@ -128,15 +139,21 @@ namespace("html", function(){
     console.log("...dONE!");
   });
   task("md", function(){
+    jake.Task["html:mustache"].invoke();
     console.log("\nCompiling Markdown...");
     fileTypeList(".md").forEach(function(inFile){
       var outFile = outputFile(inFile, ".html"),
           output  = ""+fs.readFileSync(inFile);
       console.log(inFile, "->", outFile);
 
-      var title = output.substr(0, output.indexOf("\n")).trim();
-      output = markdown(output);
-      output = handlebars.compile("{{#> _markdown title=\""+title+"\" }}"+output+"{{/_markdown}}")(data);
+      setActive(outFile, data);
+      var template = "{{> _markdown }}";
+      var lines = output.trim().split("\n");
+      if (lines[lines.length-1].substr(0, 3) === "{{>")
+        template = lines.pop();
+      data.title = lines[0].trim();
+      data.yield = markdown(lines.join("\n"));
+      output = mustache.render(template, data, partials);
 
       if (!debug) { output = htmlmin(output, htmlmin_opts); }
       jake.mkdirP(path.dirname(outFile));
@@ -152,6 +169,7 @@ namespace("css", function(){
   task("less", {async:true}, function(){
     console.log("\nCompiling LESS...");
     var filesLeft = fileTypeList(".less").length;
+    if (!filesLeft) { console.log("...dONE!"); complete(); }
     fileTypeList(".less").forEach(function(inFile){
       var outFile = outputFile(inFile, ".css"),
           output  = ""+fs.readFileSync(inFile);
@@ -185,6 +203,7 @@ namespace("js", function(){
   task("ts", {async:true}, function(){
     console.log("\nCompiling TypeScript...");
     var filesLeft = fileTypeList(".ts").length;
+    if (!filesLeft) { console.log("...dONE!"); complete(); }
     fileTypeList(".ts").forEach(function(inFile){
       var outFile = outputFile(inFile, ".js");
       console.log(inFile, "->", outFile);
@@ -230,7 +249,7 @@ namespace("static", function(){
 
   task("all", function(){
     console.log("\nCopying static files...");
-    fileTypeList([".hbs", ".md", ".less", ".ts"]);
+    fileTypeList([".mustache", ".md", ".less", ".ts"]);
     staticFiles.resolve();
     excludeIgnoredFiles(staticFiles.toArray()).forEach(function(inFile){
       var outFile = outputFile(inFile);
@@ -254,6 +273,7 @@ function fileTypeList(suffixes, inverse) {
   if (!staticFiles) {
     staticFiles = new jake.FileList();
     staticFiles.include(srcDir+"**/*");
+    staticFiles.include(srcDir+"**/.*");
   }
   suffixes.forEach(function(suffix){
     files.include(srcDir+"**/*"+suffix);
@@ -313,4 +333,22 @@ function startWatching(suffix, task) {
     }, 100);
   });
   return watcher;
+}
+
+function setActive(file, data) {
+  if (!data.nav) return;
+  var thisFile = path.parse(file);
+  data.nav.forEach(function(link){
+    if (!link.href) return;
+    var linkFile = path.parse(link.href);
+    if (linkFile.name === thisFile.name) {
+      link.active = true;
+      data.title = link.label;
+    } else if (linkFile.name === "." && thisFile.name === "index") {
+      link.active = true;
+      data.title = link.label;
+    } else {
+      link.active = false;
+    }
+  });
 }

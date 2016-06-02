@@ -1,8 +1,8 @@
-{{#> _layout title=siteName }}
+{{#block}}yield=
   <div class="hidden" id="game"></div>
   <article class="page-width">
     <noscript>You need to enable JavaScript in order to play this game.</noscript>
-    <h1>{{siteName}}</h1>
+    <h1>{{title}}</h1>
     <section id="description">
       <h2>Be whoever you want to be</h2>
       <p>{{description}}</p>
@@ -17,4 +17,5 @@
   </article>
   <script type="text/javascript" src="script/phaser.min.js"></script>
   <script type="text/javascript" src="script/main.js"></script>
-{{/_layout}}
+{{/block}}
+{{>_layout}}
