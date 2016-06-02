@@ -118,6 +118,9 @@ class Body extends MapSprite {
       if (joypad.deltaUp === 1) {
         this.jump();
       }
+      if (joypad.deltaDown === 1) {
+        this.drop();
+      }
       if (joypad.deltaA === 1) {
         this.fire();
       }
@@ -174,7 +177,7 @@ class Body extends MapSprite {
   }
 
   fire() {
-    if (this.carry) return this.drop();
+    // if (this.carry) return this.drop();
     var dir = this.scale.x / Math.abs(this.scale.x);
     this.gun.x = this.x;
     this.gun.y = this.y - this.height/2;
