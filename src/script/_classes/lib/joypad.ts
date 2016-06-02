@@ -3,13 +3,14 @@
 /*
   joypad module for unified game controls
 
-  @date 04-05-2016
+  @date 02-06-2016
  */
 
 interface JoyTouch {
     id:any,
     cx:number,
     cy:number,
+    side:string,
     btn:boolean,
     x:number,
     y:number,
@@ -25,6 +26,7 @@ module joypad {
               ap          = 0,
               bp          = 0,
               device      = localStorage.getItem("joypad.device"),
+              mode        = "",
               stickRadius = 32,
               up          = false,
               down        = false,
@@ -57,7 +59,6 @@ module joypad {
               _lastLeft = joypad.left,
               _lastRight = joypad.right,
               _lastFire = joypad.fire,
-              _touchHoldTO:any,
               _activatingGamepad = false;
 
   export function start(devices:string[] = ["keyboard", "touch", "gamepad"], autoUpdate:boolean = false) {
@@ -327,8 +328,7 @@ module joypad {
     for (var j = 0; j < e.changedTouches.length; j++) {
       var touchEvent = e.changedTouches[j];
       var touch = _getTouch(touchEvent);
-      clearTimeout(_touchHoldTO);
-      if (!joypad.a) {
+      if ((joypad.mode && touch.side === "right") || !joypad.mode) {
         touch.bTO = setTimeout(function() {
           joypad.b = true;
         }, 500);
@@ -367,14 +367,13 @@ module joypad {
       _touches.splice(i, 1);
     }
     clearTimeout(touch.bTO);
-    if (touch.btn && !joypad.b) {
-      if (joypad.a) {
-        joypad.ap+=2;
-      } else {
-        joypad.a = true;
-        _touchHoldTO = setTimeout(function(){
-          joypad.a = false;
-        }, 200);
+    if (touch.btn) {
+      if ((joypad.mode && touch.side === "right") || !joypad.mode) {
+        if (joypad.b) {
+          joypad.b = false;
+        } else {
+          joypad.ap++;
+        }
       }
     } else {
       joypad.a = joypad.b = false;
@@ -393,10 +392,12 @@ module joypad {
         id: touchEvent.identifier,
         cx: touchEvent.pageX,
         cy: touchEvent.pageY,
+        side: null,
         btn: true,
         x: 0,
         y: 0
       };
+      touch.side = touch.cx<document.body.clientWidth/2?"left":"right";
       _touches.push(touch);
     }
     return touch;
@@ -406,11 +407,36 @@ module joypad {
     if (joypad.device === "touch") {
       joypad.x = joypad.y = 0;
       for (var touch of _touches) {
-        if (Math.abs(touch.x) > Math.abs(joypad.x)) {
-          joypad.x = touch.x;
-        }
-        if (Math.abs(touch.y) > Math.abs(joypad.y)) {
-          joypad.y = touch.y;
+        switch (joypad.mode) {
+          case "rc":
+            if (touch.side === "left") {
+              joypad.x = touch.x;
+            } else {
+              joypad.y = touch.y;
+            }
+            break;
+          
+          case "rpg":
+            if (touch.side === "left") {
+              joypad.x = touch.x;
+              joypad.y = touch.y;
+            } else if (Math.round(touch.y-touch.x) < 0) {
+              joypad.a = true;
+            } else if (Math.round(touch.y - touch.x) > 0) {
+              joypad.b = true;
+            } else if (!touch.btn) {
+              joypad.a = joypad.b = false;
+            }
+            break;
+          
+          default:
+            if (Math.abs(touch.x) > Math.abs(joypad.x)) {
+              joypad.x = touch.x;
+            }
+            if (Math.abs(touch.y) > Math.abs(joypad.y)) {
+              joypad.y = touch.y;
+            }
+            break;
         }
       }
     }
@@ -434,17 +460,30 @@ module joypad {
         return joypad.device = null;
       }
       joypad.x = gamepad.axes[0] || 0;
-      joypad.y = gamepad.axes[1] || 0;
+      if (joypad.mode === "rc") {
+        joypad.y = gamepad.axes[3] || 0;
+      } else {
+        joypad.y = gamepad.axes[1] || 0;
+      }
       if (Math.abs(joypad.x) + Math.abs(joypad.y) < .2) {
         joypad.x = joypad.y = 0;
       }
-      joypad.a = (btn=gamepad.buttons[0])?btn.pressed:false;
-      joypad.b = (btn=gamepad.buttons[2])?btn.pressed:false;
-      if ((btn = gamepad.buttons[1]) && btn.pressed) {
-        joypad.y = -1;
-      }
-      if ((btn = gamepad.buttons[3]) && btn.pressed) {
-        joypad.y = 1;
+      joypad.a = false;
+      joypad.b = false;
+      if (joypad.mode === "rpg") {
+        joypad.a = joypad.a || ((btn = gamepad.buttons[0]) ? btn.pressed : false);
+        joypad.b = joypad.b || ((btn = gamepad.buttons[1]) ? btn.pressed : false);
+        joypad.b = joypad.b || ((btn = gamepad.buttons[2]) ? btn.pressed : false);
+        joypad.a = joypad.a || ((btn = gamepad.buttons[3]) ? btn.pressed : false);
+      } else {
+        joypad.a = joypad.a || ((btn = gamepad.buttons[0]) ? btn.pressed : false);
+        joypad.b = joypad.b || ((btn = gamepad.buttons[2]) ? btn.pressed : false);
+        if ((btn = gamepad.buttons[1]) && btn.pressed) {
+          joypad.y = -1;
+        }
+        if ((btn = gamepad.buttons[3]) && btn.pressed) {
+          joypad.y = 1;
+        }
       }
       if ((btn = gamepad.buttons[8]) && btn.pressed) {
         if (!_goingBack) {

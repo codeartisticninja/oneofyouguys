@@ -42,7 +42,7 @@
                  "name":"Move and jump...",
                  "properties":
                     {
-                     "text":"[\"Move and jump with arrow keys.\", \"Swipe with thumbs to move and jump.\", \"Move with D-pad or stick. Press B to jump.\"]"
+                     "text":"[\"Move and jump with arrow keys.\", \"Swipe with both thumbs to move and jump.\", \"Move with D-pad or stick. Press B to jump.\"]"
                     },
                  "propertytypes":
                     {
@@ -125,7 +125,7 @@
                  "properties":
                     {
                      "cols":12,
-                     "text":"[\"Press X to attack.\", \"Tap to attack.\", \"Push A to attack.\"]"
+                     "text":"[\"Press X to attack.\", \"Tap right thumb to attack.\", \"Push A to attack.\"]"
                     },
                  "propertytypes":
                     {
@@ -166,7 +166,7 @@
                  "properties":
                     {
                      "cols":12,
-                     "text":"[\"Press Z to possess a dead body.\", \"Long-tap to possess a dead body.\", \"Push X to possess a dead body.\"]"
+                     "text":"[\"Press Z to possess a dead body.\", \"Long-tap right thumb to possess a dead body.\", \"Push X to possess a dead body.\"]"
                     },
                  "propertytypes":
                     {

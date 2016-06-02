@@ -21,6 +21,7 @@ class GameState extends MapState {
     this.objectClasses["body"] = Body;
     this.objectClasses["text"] = Text;
     this.objectClasses["door"] = Door;
+    this.joypad.mode = "rc";
   }
 
   preload(showProgress=true) {
