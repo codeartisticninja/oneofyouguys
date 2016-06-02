@@ -215,7 +215,7 @@ class Body extends MapSprite {
       } else {
         this.mapState.gameApp.endGame(false);
       }
-    }, 1000);
+    }, 500);
     this.play("revive");
     this.body.setSize(16, 32, 8, 0);
     return this;
