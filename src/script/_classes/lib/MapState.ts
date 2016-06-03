@@ -9,7 +9,7 @@ import joypad     = require("./joypad");
 /**
  * MapState class
  * 
- * @date 24-04-2016
+ * @date 03-06-2016
  */
 
 class MapState extends Phaser.State {
@@ -54,18 +54,17 @@ class MapState extends Phaser.State {
     }
     if (showProgress) {
       this.eng.stage.backgroundColor = 0;
-      txt = this.eng.add.text(0, this.stage.height, "0%", {
+      txt = this.eng.add.text(0, this.stage.height, "Loading... 0%", {
         fill: "white"
       });
-      txt.anchor.set(0, 1);
+      txt.anchor.set(.5);
+      txt.position.set(this.game.width/2, this.game.height/2);
     }
     this.eng.load.onFileComplete.add(function(progress: number, key: string, success:boolean, loadedFiles:number, totalFiles:number) {
       if (key === this.mapName) {
         this.loadAssets();
       } else if (txt) {
-        txt.anchor.x = progress / 100;
-        txt.position.x = txt.anchor.x * txt.game.width;
-        txt.text = progress + "%";
+        txt.text = "Loading... "+progress+"%";
       }
       if (loadedFiles === totalFiles) {
         this.loaded = true;
@@ -117,8 +116,8 @@ class MapState extends Phaser.State {
       this.map.addTilesetImage(tileset.name);
     }
     this.game.world.setBounds(0, 0,
-      Math.max(this.world.width,  this.map.widthInPixels),
-      Math.max(this.world.height, this.map.heightInPixels)
+      this.map.widthInPixels,
+      this.map.heightInPixels
     );
     for (layer of this.mapData.layers) {
       switch (layer.type) {
