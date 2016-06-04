@@ -1,27 +1,26 @@
-{ "backgroundcolor":"#d0d0ef",
+{ "backgroundcolor":"#eeeeee",
  "height":14,
  "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+         "height":14,
+         "name":"tiles",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":25,
+         "x":0,
+         "y":0
+        }, 
         {
          "draworder":"index",
          "height":14,
          "name":"objects",
          "objects":[
                 {
-                 "gid":1,
-                 "height":256,
-                 "id":73,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":800,
-                 "x":0,
-                 "y":256
-                }, 
-                {
-                 "gid":11,
+                 "gid":40,
                  "height":64,
-                 "id":76,
+                 "id":105,
                  "name":"",
                  "properties":
                     {
@@ -37,13 +36,13 @@
                  "type":"button",
                  "visible":true,
                  "width":192,
-                 "x":128,
-                 "y":352
+                 "x":576,
+                 "y":128
                 }, 
                 {
-                 "gid":14,
+                 "gid":40,
                  "height":64,
-                 "id":77,
+                 "id":107,
                  "name":"",
                  "properties":
                     {
@@ -61,8 +60,195 @@
                  "type":"button",
                  "visible":true,
                  "width":192,
-                 "x":480,
-                 "y":352
+                 "x":576,
+                 "y":224
+                }, 
+                {
+                 "gid":37,
+                 "height":64,
+                 "id":102,
+                 "name":"",
+                 "properties":
+                    {
+                     "arguments":"[\"\/prefs.json\", \"music.enabled\"]",
+                     "command":"toggle"
+                    },
+                 "propertytypes":
+                    {
+                     "arguments":"string",
+                     "command":"string"
+                    },
+                 "rotation":0,
+                 "type":"button",
+                 "visible":true,
+                 "width":64,
+                 "x":592,
+                 "y":432
+                }, 
+                {
+                 "gid":37,
+                 "height":64,
+                 "id":104,
+                 "name":"",
+                 "properties":
+                    {
+                     "arguments":"[\"\/prefs.json\", \"sfx.enabled\"]",
+                     "command":"toggle"
+                    },
+                 "propertytypes":
+                    {
+                     "arguments":"string",
+                     "command":"string"
+                    },
+                 "rotation":0,
+                 "type":"button",
+                 "visible":true,
+                 "width":64,
+                 "x":688,
+                 "y":432
+                }, 
+                {
+                 "gid":28,
+                 "height":32,
+                 "id":92,
+                 "name":"",
+                 "rotation":0,
+                 "type":"body",
+                 "visible":true,
+                 "width":32,
+                 "x":64,
+                 "y":128
+                }, 
+                {
+                 "gid":28,
+                 "height":32,
+                 "id":95,
+                 "name":"",
+                 "rotation":0,
+                 "type":"body",
+                 "visible":true,
+                 "width":32,
+                 "x":192,
+                 "y":96
+                }, 
+                {
+                 "gid":28,
+                 "height":32,
+                 "id":97,
+                 "name":"",
+                 "rotation":0,
+                 "type":"body",
+                 "visible":true,
+                 "width":32,
+                 "x":320,
+                 "y":160
+                }, 
+                {
+                 "height":16,
+                 "id":83,
+                 "name":"New game",
+                 "properties":
+                    {
+                     "scale":0.5,
+                     "text":"New game"
+                    },
+                 "propertytypes":
+                    {
+                     "scale":"float",
+                     "text":"string"
+                    },
+                 "rotation":0,
+                 "type":"text",
+                 "visible":true,
+                 "width":16,
+                 "x":608,
+                 "y":88
+                }, 
+                {
+                 "height":16,
+                 "id":84,
+                 "name":"Continue",
+                 "properties":
+                    {
+                     "scale":0.5,
+                     "text":"Continue"
+                    },
+                 "propertytypes":
+                    {
+                     "scale":"float",
+                     "text":"string"
+                    },
+                 "rotation":0,
+                 "type":"text",
+                 "visible":true,
+                 "width":16,
+                 "x":608,
+                 "y":184
+                }, 
+                {
+                 "height":16,
+                 "id":85,
+                 "name":"one of you guys",
+                 "properties":
+                    {
+                     "center":true,
+                     "cols":8,
+                     "scale":2,
+                     "text":"I'm one of you guys now"
+                    },
+                 "propertytypes":
+                    {
+                     "center":"bool",
+                     "cols":"int",
+                     "scale":"float",
+                     "text":"string"
+                    },
+                 "rotation":0,
+                 "type":"text",
+                 "visible":true,
+                 "width":16,
+                 "x":16,
+                 "y":48
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":89,
+                 "name":"",
+                 "properties":
+                    {
+                     "enable":false
+                    },
+                 "propertytypes":
+                    {
+                     "enable":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":608,
+                 "y":416
+                }, 
+                {
+                 "gid":2,
+                 "height":32,
+                 "id":90,
+                 "name":"",
+                 "properties":
+                    {
+                     "enable":false
+                    },
+                 "propertytypes":
+                    {
+                     "enable":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":704,
+                 "y":416
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -71,7 +257,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":79,
+ "nextobjectid":108,
  "orientation":"orthogonal",
  "properties":
     {
@@ -89,30 +275,60 @@
  "tileheight":32,
  "tilesets":[
         {
-         "columns":1,
+         "columns":2,
          "firstgid":1,
-         "image":"..\/gfx\/titles_800x256.png",
-         "imageheight":256,
-         "imagewidth":800,
+         "image":"..\/gfx\/icons_16x16.png",
+         "imageheight":16,
+         "imagewidth":32,
          "margin":0,
-         "name":"titles_800x256",
+         "name":"icons_16x16",
          "spacing":0,
-         "tilecount":1,
-         "tileheight":256,
-         "tilewidth":800
+         "tilecount":2,
+         "tileheight":16,
+         "tilewidth":16,
+         "transparentcolor":"#ff00ff"
         }, 
         {
-         "columns":3,
-         "firstgid":2,
-         "image":"..\/gfx\/buttons_192x64.png",
-         "imageheight":320,
-         "imagewidth":576,
+         "columns":5,
+         "firstgid":3,
+         "image":"..\/gfx\/swatches_32x32.png",
+         "imageheight":160,
+         "imagewidth":160,
          "margin":0,
-         "name":"buttons_192x64",
+         "name":"swatches_32x32",
          "spacing":0,
-         "tilecount":15,
-         "tileheight":64,
-         "tilewidth":192
+         "tilecount":25,
+         "tileheight":32,
+         "tilewidth":32,
+         "transparentcolor":"#ff00ff"
+        }, 
+        {
+         "columns":9,
+         "firstgid":28,
+         "image":"..\/gfx\/body_32x32.png",
+         "imageheight":32,
+         "imagewidth":288,
+         "margin":0,
+         "name":"body_32x32",
+         "spacing":0,
+         "tilecount":9,
+         "tileheight":32,
+         "tilewidth":32,
+         "transparentcolor":"#ff00ff"
+        }, 
+        {
+         "columns":6,
+         "firstgid":37,
+         "image":"..\/gfx\/buttons_32x32.png",
+         "imageheight":32,
+         "imagewidth":192,
+         "margin":0,
+         "name":"buttons_32x32",
+         "spacing":0,
+         "tilecount":6,
+         "tileheight":32,
+         "tilewidth":32,
+         "transparentcolor":"#ff00ff"
         }],
  "tilewidth":32,
  "version":1,

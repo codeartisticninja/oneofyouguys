@@ -5,8 +5,10 @@ import url = require("url");
 /**
  * StorageFile class
  * 
- * @date 04-05-2016
+ * @date 03-06-2016
  */
+
+var cache = {};
 
 class StorageFile {
   public url:string;
@@ -16,6 +18,11 @@ class StorageFile {
 
   constructor(uri:string, public data={}) {
     this.url = url.resolve(location.pathname, uri);
+    if (cache[this.url]) {
+      return cache[this.url];
+    } else {
+      cache[this.url] = this;
+    }
     if (this.url.indexOf("#") === -1) {
       this.storage = localStorage;
     } else {

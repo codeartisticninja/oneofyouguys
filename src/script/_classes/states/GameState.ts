@@ -36,14 +36,18 @@ class GameState extends MapState {
 
     this.physics.startSystem(Phaser.Physics.ARCADE);
     this.physics.arcade.gravity.y = 2048;
-    this.leadingCamera = new LeadingCamera(this.objectTypes["body"].getAt(0), 160, 0);
+    if (this.objectTypes["body"]) {
+      this.leadingCamera = new LeadingCamera(this.objectTypes["body"].getAt(0), 160, 0);
+    }
 
     this._timeInRoom = 0;
   }
 
   update() {
     super.update();
-    this.leadingCamera.update();
+    if (this.leadingCamera) {
+      this.leadingCamera.update();
+    }
     this.game.physics.arcade.collide(this.objectType("body"), this.layers["tiles"]);
     this.game.physics.arcade.collide(this.objectType("door"), this.layers["tiles"]);
     this.game.physics.arcade.collide(this.objectType("goal"), this.layers["tiles"]);
@@ -92,7 +96,7 @@ class GameState extends MapState {
     if (body.alive) {
       bullet.kill();
       body.damage(.34);
-      body.sfx.play("damage");
+      body.playSound("damage");
       
       if (attacker.clan === "orange") {
         attacker.traitor = body.clan !== "purple";

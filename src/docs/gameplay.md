@@ -1,6 +1,13 @@
 Gameplay
 ========
 
+Nouns and verbs
+---------------
+
+Noun | verb | noun
+-|-
+Mario | jumps on | goomba
+
 Accomplishment
 --------------
 

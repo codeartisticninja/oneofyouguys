@@ -5,10 +5,12 @@ import MapState = require("./MapState");
 /**
  * MapSprite class
  *
- * @date 15-04-2016
+ * @date 04-06-2016
  */
 
 class MapSprite extends Phaser.Sprite {
+  public sfx: Phaser.Sound;
+
   constructor(public mapState:MapState, public object:any) {
     super(mapState.game, object.x, object.y);
     var tileset:any,
@@ -60,6 +62,12 @@ class MapSprite extends Phaser.Sprite {
       } catch(err) {
         return this.object.properties[key];
       }
+    }
+  }
+
+  playSound(marker?: string, position?: number, loop?: boolean, forceRestart?: boolean) {
+    if (this.mapState.gameApp.prefs.get("sfx.enabled")) {
+      this.sfx.play(marker, position, this.mapState.gameApp.prefs.get("sfx.volume"), loop, forceRestart);
     }
   }
 }

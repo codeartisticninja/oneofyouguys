@@ -14,10 +14,13 @@ class Text extends MapSprite {
 
   constructor(mapState:MapState, object:any) {
     super(mapState, object);
-    this.scale.set(1);
+    this.scale.set(this.getProperty("scale")||1);
     this.print = this.game.add.retroFont("font", 32, 32, Phaser.RetroFont.TEXT_SET1.trim(), 96, 4, 4, 4, 4);
     this.print.autoUpperCase = false;
     this.print.multiLine = true;
+    if (this.getProperty("center")) {
+      this.print.align = Phaser.RetroFont.ALIGN_CENTER;
+    }
     this.setTexture(this.print);
     
     this.body.immovable = true;

@@ -1,16 +1,19 @@
 /// <reference path="../../_d.ts/phaser/phaser.d.ts"/>
 "use strict";
-import MapState = require("./MapState");
+import MapState     = require("./MapState");
+import StorageFile  = require("./StorageFile");
+
 
 /**
  * MapButton class
  *
- * @date 15-04-2016
+ * @date 03-06-2016
  */
 
 class MapButton extends Phaser.Button {
   public command:string;
   public arguments:any;
+  public file:StorageFile;
   private _firstFrame:number;
 
   constructor(public mapState:MapState, public object:any) {
@@ -33,17 +36,13 @@ class MapButton extends Phaser.Button {
     this.rotation = this.object.rotation * (Math.PI / 180);
     this.name = this.object.name;
 
-    this.command = this.object.properties.command;
-    try {
-      this.arguments = JSON.parse(this.object.properties.arguments);
-    } catch (err) {
-      this.arguments = this.object.properties.arguments;
-    }
+    this.command = this.getProperty("command");
+    this.arguments = this.getProperty("arguments");
     if (typeof this.arguments !== "object") {
       this.arguments = [this.arguments];
     }
 
-    if (JSON.parse(this.object.properties.autofocus || "false")) {
+    if (this.getProperty("autofocus")) {
       mapState.buttonType = this.object.type;
       val = mapState.objectTypes[this.mapState.buttonType].length;
       setTimeout((function(){
@@ -51,6 +50,13 @@ class MapButton extends Phaser.Button {
         mapState.focusedButton = val;
         mapState.joypad.start();
       }).bind(this), 256);
+    }
+    if (["setStr", "setInt", "setFloat", "toggle", "adjust"].indexOf(this.command) !== -1) {
+      this.file = new StorageFile(this.arguments.file||this.arguments[0]);
+      if (this.command === "toggle" && this.file.get(this.arguments.key || this.arguments[1])) {
+        this._firstFrame += 3;
+        this.frame = this._firstFrame;
+      }
     }
     this.onInputOut.add(this.blur, this);
     this.onInputOver.add(this.focus, this);
@@ -78,11 +84,49 @@ class MapButton extends Phaser.Button {
   release() {
   	var args:any;
     if (this.frame == this._firstFrame + 2) {
+      if (this.file) {
+        switch (this.command) {
+          case "setStr":
+            this.file.set(this.arguments.key || this.arguments[1], prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1])));
+            break;
+          
+          case "setInt":
+            this.file.set(this.arguments.key || this.arguments[1], parseInt(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1]))));
+            break;
+          
+          case "setFloat":
+            this.file.set(this.arguments.key || this.arguments[1], parseFloat(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1]))));
+            break;
+          
+          case "toggle":
+            this.file.set(this.arguments.key || this.arguments[1], !(this.file.get(this.arguments.key || this.arguments[1])));
+            if (this.file.get(this.arguments.key || this.arguments[1])) {
+              this._firstFrame += 3;
+            } else {
+              this._firstFrame -= 3;
+            }
+            break;
+          
+          default:
+            this.file.set(this.arguments.key || this.arguments[1], JSON.parse(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1]))));
+            break;
+        }
+      }
       this.mapState.command(this.command, this.arguments);
       if (this.mapState.focusedButton === -1) {
         this.blur();
       } else {
         this.focus();
+      }
+    }
+  }
+
+  getProperty(key: string) {
+    if (this.object.properties) {
+      try {
+        return JSON.parse(this.object.properties[key]);
+      } catch (err) {
+        return this.object.properties[key];
       }
     }
   }

@@ -172,7 +172,7 @@ class Body extends MapSprite {
     if (this.jumps > 0) {
       this.jumps--;
       this.body.velocity.y = -650;
-      this.sfx.play("jump");
+      this.playSound("jump");
     }
   }
 
@@ -183,7 +183,7 @@ class Body extends MapSprite {
     this.gun.y = this.y - this.height/2;
     this.gun.setXSpeed(1600*dir, 1600*dir);
     this.gun.start(true, 200, null, 1);
-    this.sfx.play("fire");
+    this.playSound("fire");
   }
 
   kill(pos=false) {
@@ -243,7 +243,7 @@ class Body extends MapSprite {
     (<GameState>this.mapState).leadingCamera.follow(null);
     this.carry.revive();
     this.kill(true);
-    this.sfx.play("posses");
+    this.playSound("posses");
   }
 
 }

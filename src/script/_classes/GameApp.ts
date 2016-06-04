@@ -13,7 +13,7 @@ class GameApp extends BaseGameApp {
     super(containerId, fullScreen);
     var maps = [ "start", "lose", "win" ];
     for (var i in maps) {
-      this.eng.state.add(maps[i] + "_state", new MapState(this, maps[i] + "_map", "assets/maps/" + maps[i] + ".json"));
+      this.eng.state.add(maps[i] + "_state", new GameState(this, maps[i] + "_map", "assets/maps/" + maps[i] + ".json"));
     }
     maps = [ "tutorial", "friends", "spies", "tower", "test" ];
     for (var i in maps) {

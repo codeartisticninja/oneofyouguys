@@ -5,7 +5,7 @@ import StorageFile = require("./StorageFile");
 /**
  * BaseGameApp class
  * 
- * @date 04-05-2016
+ * @date 04-06-2016
  */
 
 class BaseGameApp {
@@ -41,6 +41,8 @@ class BaseGameApp {
     });
     this.prefs.set("music.enabled", true, true);
     this.prefs.set("music.volume", 0.5, true);
+    this.prefs.set("sfx.enabled", true, true);
+    this.prefs.set("sfx.volume", 1, true);
   }
 
   hashChange() {
