@@ -9,7 +9,7 @@ import joypad     = require("./joypad");
 /**
  * MapState class
  * 
- * @date 03-06-2016
+ * @date 04-06-2016
  */
 
 class MapState extends Phaser.State {
@@ -143,7 +143,7 @@ class MapState extends Phaser.State {
       }
     }
     if (this.getProperty("musicKey")) {
-      this.gameApp.playMusic(this.getProperty("musicKey"), this.getProperty("musicLoop", true));
+      this.gameApp.playMusic(this.getProperty("musicKey"), this.getProperty("musicLoop"));
     }
   };
 

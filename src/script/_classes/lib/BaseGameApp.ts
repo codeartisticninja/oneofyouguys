@@ -101,7 +101,8 @@ class BaseGameApp {
     this.music.volume = volume;
     this.music.loop = loop;
     if (this.music.paused) {
-      if(!this.music.play()) {
+      this.music.play();
+      if(this.music.paused) {
         var cb = () => {
           this.music.play();
           document.body.removeEventListener("touchstart", cb);
