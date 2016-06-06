@@ -1,15 +1,16 @@
 /// <reference path="../../_d.ts/phaser/phaser.d.ts"/>
 "use strict";
-import GameApp    = require("../GameApp");
-import MapSprite  = require("./MapSprite");
-import MapButton  = require("./MapButton");
-import joypad     = require("./joypad");
+import GameApp     = require("../GameApp");
+import MapSprite   = require("./MapSprite");
+import MapButton   = require("./MapButton");
+import joypad      = require("./joypad");
+import StorageFile = require("./StorageFile");
 
 
 /**
  * MapState class
  * 
- * @date 04-06-2016
+ * @date 06-06-2016
  */
 
 class MapState extends Phaser.State {
@@ -208,17 +209,38 @@ class MapState extends Phaser.State {
   }
 
   command(command:string, args:any):boolean {
+    var file:StorageFile;
     switch (command) {
       case "url":
         location.assign(args.href || args[0]);
         break;
 
-      case "back":
-        history.back();
+      case "goBack":
+        this.gameApp.goBack();
         break;
 
-      case "state":
-        this.game.state.start(args.key || args[0], args.clearWorld, args.clearCache, args.args);
+      case "goTo":
+        if (args.file) {
+          file = new StorageFile(args.file || args[0]);
+          args.state = file.get(args.key);
+          if (!this.eng.state.checkState(args.state)) {
+            file.delete(args.key);
+            location.reload();
+          }
+        }
+        this.gameApp.goTo(args.state || args[0]);
+        break;
+      
+      case "switchTo":
+        if (args.file) {
+          file = new StorageFile(args.file || args[0]);
+          args.state = file.get(args.key);
+          if (!this.eng.state.checkState(args.state)) {
+            file.delete(args.key);
+            location.reload();
+          }
+        }
+        this.gameApp.switchTo(args.state || args[0]);
         break;
       
       case "restart":

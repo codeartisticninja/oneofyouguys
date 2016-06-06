@@ -5,7 +5,7 @@ import StorageFile = require("./StorageFile");
 /**
  * BaseGameApp class
  * 
- * @date 04-06-2016
+ * @date 06-06-2016
  */
 
 class BaseGameApp {
@@ -17,6 +17,7 @@ class BaseGameApp {
   public loadedAll=false;
   public saveFile = new StorageFile("save.json");
   public prefs = new StorageFile("/prefs.json");
+  public history:string[] = [];
 
 
   constructor(containerId:string, fullScreen?:boolean) {
@@ -43,10 +44,81 @@ class BaseGameApp {
     this.prefs.set("music.volume", 0.5, true);
     this.prefs.set("sfx.enabled", true, true);
     this.prefs.set("sfx.volume", 1, true);
+
+    setTimeout(()=>{
+      this.hashChange();
+    });
   }
 
   hashChange() {
-    // TODO
+    var hash = location.hash.replace("#", ""),
+        state = this.eng.state.current;
+    if (location.search === "?debug") {
+      if (hash) {
+        state = hash;
+      } else {
+        state = "start_state";
+      }
+    } else {
+      if (this.history.length === 0) {
+        return this.goTo("start_state");
+      }
+      while (hash.length < this.history.length) {
+        this.history.pop();
+      }
+      state = this.history[this.history.length-1];
+    }
+    if (state !== this.eng.state.current) {
+      this.eng.state.start(state);
+    }
+  }
+
+  setHash() {
+    var hash = location.hash.replace("#", "");
+    if (location.search === "?debug") {
+      hash = this.eng.state.current;
+    } else {
+      while (hash.length < this.history.length) {
+        hash += hash.charAt(0) || "~";
+      }
+      hash = hash.substr(0, this.history.length);
+    }
+    if (location.hash.replace("#", "") === hash) {
+      this.hashChange();
+    } else {
+      location.hash = hash;
+    }
+  }
+
+  goBack() {
+    history.back();
+  }
+
+  goTo(state:string) {
+    var back = 0;
+    if (location.search === "?debug") {
+      location.assign("#"+state);
+    } else {
+      if (this.history.indexOf(state) === -1) {
+        this.history.push(state);
+        this.setHash();
+      } else {
+        while (this.history[this.history.length - 1] !== state) {
+          this.history.pop();
+          back--;
+        }
+        history.go(back);
+      }
+    }
+  }
+
+  switchTo(state:string) {
+    if (location.search === "?debug") {
+      location.replace("#"+state);
+    } else {
+      this.history.pop();
+      this.goTo(state);
+    }
   }
 
   goFullScreen() {

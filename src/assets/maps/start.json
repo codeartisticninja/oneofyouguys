@@ -25,7 +25,7 @@
                  "properties":
                     {
                      "arguments":"tutorial_room",
-                     "command":"state"
+                     "command":"goTo"
                     },
                  "propertytypes":
                     {
@@ -46,9 +46,9 @@
                  "name":"",
                  "properties":
                     {
-                     "arguments":"#game",
+                     "arguments":"{\"file\": \"save.json\",\n\"key\": \"room\"}",
                      "autofocus":true,
-                     "command":"url"
+                     "command":"goTo"
                     },
                  "propertytypes":
                     {

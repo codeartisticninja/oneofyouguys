@@ -83,9 +83,9 @@ class GameState extends MapState {
   private _bodyMeetsGoal(body:Body, goal:MapSprite) {
     if (body.possessed) {
       if (goal.getProperty("destination")) {
-        this.gameApp.gotoRoom(goal.getProperty("destination"));
+        this.gameApp.switchTo(goal.getProperty("destination")+"_room");
       } else {
-        this.gameApp.endGame(true);
+        this.gameApp.goTo("win_state");
       }
     }
   }

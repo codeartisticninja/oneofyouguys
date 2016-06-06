@@ -13,11 +13,13 @@
                  "name":"",
                  "properties":
                     {
+                     "arguments":"start_state",
                      "autofocus":true,
-                     "command":"back"
+                     "command":"goTo"
                     },
                  "propertytypes":
                     {
+                     "arguments":"string",
                      "autofocus":"bool",
                      "command":"string"
                     },

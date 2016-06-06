@@ -193,7 +193,7 @@ class Body extends MapSprite {
     }
     if (this.possessed && !pos) {
       setTimeout(() => {
-        this.mapState.gameApp.endGame(false);
+        this.mapState.gameApp.goTo("lose_state");
       }, 1024);
     };
     this.exists =
@@ -213,7 +213,7 @@ class Body extends MapSprite {
         this.possessed = true;
         (<GameState>this.mapState).leadingCamera.follow(this);
       } else {
-        this.mapState.gameApp.endGame(false);
+        this.mapState.gameApp.goTo("lose_state");
       }
     }, 500);
     this.play("revive");

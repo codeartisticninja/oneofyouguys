@@ -19,46 +19,22 @@ class GameApp extends BaseGameApp {
     for (var i in maps) {
       this.eng.state.add(maps[i] + "_room", new GameState(this, maps[i] + "_map", "assets/maps/" + maps[i] + ".json"));
     }
-
-    this.hashChange();
+    this.saveFile.set("room", "tutorial_room", true);
   }
 
-  hashChange() {
-    var hash = location.hash.replace("#", "");
-    switch (hash) {
-      case "game":
-        this.gotoRoom(this.saveFile.get("room") || "tutorial");
-        break;
-
-      case "test":
-        this.gotoRoom("test");
-        break;
-
-      case "lose":
-        this.eng.state.start("lose_state");
-        break;
-
-      default:
-        this.eng.state.start("start_state");
+  goTo(state: string) {
+    super.goTo(state);
+    switch (state) {
+      case "win_state":
+        this.saveFile.delete("room");
         break;
     }
   }
 
-  gotoRoom(roomName: string) {
-    if (this.eng.state.checkState(roomName + "_room")) {
-      this.eng.state.start(roomName + "_room");
-      this.saveFile.set("room", roomName);
-    } else {
-      this.endGame(true);
-    }
-  }
-
-  endGame(win: boolean) {
-    if (win) {
-      this.eng.state.start("win_state");
-      this.saveFile.set("room", null);
-    } else {
-      location.assign("#lose");
+  switchTo(state: string) {
+    super.switchTo(state);
+    if (state.indexOf("_room") > 0) {
+      this.saveFile.set("room", state);
     }
   }
 

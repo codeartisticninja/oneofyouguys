@@ -14,7 +14,7 @@
                  "properties":
                     {
                      "autofocus":true,
-                     "command":"back"
+                     "command":"goBack"
                     },
                  "propertytypes":
                     {

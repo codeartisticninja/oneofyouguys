@@ -11,9 +11,6 @@ var game: GameApp,
     information: HTMLElement;
 
 function init() {
-  if (location.search !== "?debug") {
-    location.assign("#start");
-  }
   gameContainer = document.getElementById("game");
   information = document.getElementsByTagName("article")[0];
   toggleInfo();

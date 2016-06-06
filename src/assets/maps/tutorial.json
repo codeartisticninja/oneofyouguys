@@ -42,7 +42,7 @@
                  "name":"Move and jump...",
                  "properties":
                     {
-                     "text":"[\"Move and jump with arrow keys.\", \"Swipe with both thumbs to move and jump.\", \"Move with D-pad or stick. Press B to jump.\"]"
+                     "text":"[\"Move and jump with arrow keys.\", \"Swipe left thumb to move, right thumb to jump.\", \"Move with left stick. Push B to jump.\"]"
                     },
                  "propertytypes":
                     {
