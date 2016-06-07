@@ -98,18 +98,7 @@ class GameState extends MapState {
       body.damage(.34);
       body.playSound("damage");
       
-      if (attacker.clan === "orange") {
-        attacker.traitor = body.clan !== "purple";
-      }
-      if (attacker.clan === "green") {
-        attacker.traitor = body.clan !== "orange";
-      }
-      if (attacker.clan === "purple") {
-        attacker.traitor = body.clan !== "green";
-      }
-      if (body.traitor) {
-        attacker.traitor = false;
-      }
+      attacker.traitor = body.clan === attacker.clan;
     }
   }
 

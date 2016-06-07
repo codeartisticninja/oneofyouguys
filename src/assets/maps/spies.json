@@ -20,10 +20,10 @@
                 {
                  "height":32,
                  "id":152,
-                 "name":"Pecking order",
+                 "name":"This used to be...",
                  "properties":
                     {
-                     "text":"\"There's a pecking order governing this place..\""
+                     "text":"This used to be such a nice neighborhood  once.."
                     },
                  "propertytypes":
                     {
@@ -39,10 +39,10 @@
                 {
                  "height":32,
                  "id":156,
-                 "name":"Who hates who",
+                 "name":"own kind..",
                  "properties":
                     {
-                     "text":"\"Purples pecking on greens pecking on oranges e.t.c...\\nCircle of life..\""
+                     "text":"Now everybody just watch out for their own kind.."
                     },
                  "propertytypes":
                     {
@@ -53,7 +53,7 @@
                  "visible":true,
                  "width":32,
                  "x":32,
-                 "y":128
+                 "y":160
                 }, 
                 {
                  "gid":26,
@@ -140,10 +140,10 @@
                 {
                  "height":32,
                  "id":165,
-                 "name":"Break the order",
+                 "name":"At least you",
                  "properties":
                     {
-                     "text":"\"Break the order and everyone will turn against you..\""
+                     "text":"At least you can see things from a different perspective.."
                     },
                  "propertytypes":
                     {
@@ -163,7 +163,7 @@
                  "properties":
                     {
                      "cols":12,
-                     "text":"\"That's all the help you're getting..\""
+                     "text":"I don't know what else to say.."
                     },
                  "propertytypes":
                     {
@@ -220,10 +220,10 @@
                 {
                  "height":32,
                  "id":173,
-                 "name":"Get ready..",
+                 "name":"can't please everyone",
                  "properties":
                     {
-                     "text":"\"That's it...\\nGet ready for battle..\""
+                     "text":"Oh well.. You can't please everyone.."
                     },
                  "propertytypes":
                     {
@@ -234,7 +234,7 @@
                  "visible":true,
                  "width":32,
                  "x":1664,
-                 "y":32
+                 "y":128
                 }, 
                 {
                  "gid":8,
@@ -379,10 +379,10 @@
                 {
                  "height":32,
                  "id":181,
-                 "name":"Otherwise harmless..",
+                 "name":"hurting others..",
                  "properties":
                     {
-                     "text":"\"Otherwise, anyone not picking on you will leave you alone..\""
+                     "text":"Even if it means hurting others.."
                     },
                  "propertytypes":
                     {
@@ -394,6 +394,25 @@
                  "width":32,
                  "x":864,
                  "y":160
+                }, 
+                {
+                 "height":32,
+                 "id":182,
+                 "name":"price of progress",
+                 "properties":
+                    {
+                     "text":"But that's the price of progress, I guess.."
+                    },
+                 "propertytypes":
+                    {
+                     "text":"string"
+                    },
+                 "rotation":0,
+                 "type":"text",
+                 "visible":true,
+                 "width":32,
+                 "x":1664,
+                 "y":32
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -402,7 +421,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":182,
+ "nextobjectid":183,
  "orientation":"orthogonal",
  "properties":
     {

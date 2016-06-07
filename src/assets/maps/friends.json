@@ -96,8 +96,8 @@
                  "type":"body",
                  "visible":true,
                  "width":32,
-                 "x":1464,
-                 "y":224
+                 "x":976,
+                 "y":184
                 }, 
                 {
                  "gid":26,
@@ -167,7 +167,7 @@
                  "properties":
                     {
                      "cols":12,
-                     "text":"\"I guess you better get wise about who you can trust..\""
+                     "text":"Nobody likes a stranger.."
                     },
                  "propertytypes":
                     {
@@ -279,8 +279,8 @@
                  "type":"body",
                  "visible":true,
                  "width":32,
-                 "x":1888,
-                 "y":328
+                 "x":1664,
+                 "y":312
                 }, 
                 {
                  "gid":26,

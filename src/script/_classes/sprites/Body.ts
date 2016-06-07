@@ -21,6 +21,8 @@ class Body extends MapSprite {
 
   constructor(mapState:GameState, object:any) {
     super(mapState, object);
+    this.autoCull = false;
+    this.renderable = false;
     this.clan = this.getProperty("clan") || Phaser.ArrayUtils.getRandomItem(["orange", "green", "purple"]);
     switch (this.clan) {
       case "orange":
@@ -37,7 +39,7 @@ class Body extends MapSprite {
     this.possessed = !!(this.getProperty("possessed"));
 
     this.body.setSize(16, 32, 8, 0);
-    this.scale.set(2);
+    this.scale.set(this.possessed?2:-2, 2);
     this.body.bounce.set(.1);
 
     this.animations.add("idle",   [0], 15, true);
@@ -59,11 +61,15 @@ class Body extends MapSprite {
     this.gun.maxParticleScale = .25;
     this.gun.makeParticles("swatches_32x32", 2, 10, true);
 
-    this.body.velocity.x = 50 + Math.random() * 50;
     joypad.start();
   }
 
   update() {
+    if (this.inCamera && !this.renderable) {
+      this.body.velocity.x = -50 - Math.random() * 50;
+      this.renderable = true;
+    }
+    if (!this.renderable) return;
     super.update();
     var dir = this.scale.x / Math.abs(this.scale.x);
     if (this.body.onFloor()) {
@@ -76,7 +82,6 @@ class Body extends MapSprite {
         if (other === this) return;
         if (Math.abs(this.y - other.y) < 32) {
           if (other.traitor && Math.abs(this.x - other.x) < 400) {
-            this.trator = false;
             if (dir < 0 && other.x > this.x) {
               dir = 1;
               this.scale.x = Math.abs(this.scale.x);
@@ -144,15 +149,10 @@ class Body extends MapSprite {
       }
       if (this.inSight) {
         if (this.inSight.traitor) {
-          if (Math.random() < (5 / 60)) this.fire();
+          this.traitor = false;
+          if (Math.random() < (10 / 60)) this.fire();
         }
-        if (this.clan === "orange" && this.inSight.clan === "purple") {
-          if (Math.random() < (1 / 60)) this.fire();
-        }
-        if (this.clan === "green" && this.inSight.clan === "orange") {
-          if (Math.random() < (1.5 / 60)) this.fire();
-        }
-        if (this.clan === "purple" && this.inSight.clan === "green") {
+        if (this.clan !== this.inSight.clan) {
           if (Math.random() < (2 / 60)) this.fire();
         }
       }
