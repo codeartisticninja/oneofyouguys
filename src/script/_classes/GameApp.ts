@@ -11,7 +11,7 @@ import GameState = require("./states/GameState");
 class GameApp extends BaseGameApp {
   constructor(containerId: string, fullScreen?: boolean) {
     super(containerId, fullScreen);
-    var maps = [ "start", "lose", "win" ];
+    var maps = [ "start", "settings", "lose", "win" ];
     for (var i in maps) {
       this.eng.state.add(maps[i] + "_state", new GameState(this, maps[i] + "_map", "assets/maps/" + maps[i] + ".json"));
     }
@@ -26,7 +26,7 @@ class GameApp extends BaseGameApp {
     super.goTo(state);
     switch (state) {
       case "win_state":
-        this.saveFile.delete("room");
+        this.saveFile.delete();
         break;
     }
   }

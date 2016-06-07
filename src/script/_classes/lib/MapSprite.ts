@@ -5,7 +5,7 @@ import MapState = require("./MapState");
 /**
  * MapSprite class
  *
- * @date 04-06-2016
+ * @date 07-06-2016
  */
 
 class MapSprite extends Phaser.Sprite {
@@ -66,8 +66,8 @@ class MapSprite extends Phaser.Sprite {
   }
 
   playSound(marker?: string, position?: number, loop?: boolean, forceRestart?: boolean) {
-    if (this.mapState.gameApp.prefs.get("sfx.enabled")) {
-      this.sfx.play(marker, position, this.mapState.gameApp.prefs.get("sfx.volume"), loop, forceRestart);
+    if (this.mapState.gameApp.prefs.data["sfx"]["enabled"]) {
+      this.sfx.play(marker, position, this.mapState.gameApp.prefs.data["sfx"]["volume"], loop, forceRestart);
     }
   }
 }

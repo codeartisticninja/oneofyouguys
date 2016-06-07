@@ -407,14 +407,12 @@
  "properties":
     {
      "musicKey":"fresh_music",
-     "musicLoop":true,
-     "musicVolume":0.2
+     "musicLoop":true
     },
  "propertytypes":
     {
      "musicKey":"string",
-     "musicLoop":"bool",
-     "musicVolume":"float"
+     "musicLoop":"bool"
     },
  "renderorder":"right-down",
  "tileheight":32,

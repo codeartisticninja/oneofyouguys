@@ -7,7 +7,7 @@ import StorageFile  = require("./StorageFile");
 /**
  * MapButton class
  *
- * @date 03-06-2016
+ * @date 07-06-2016
  */
 
 class MapButton extends Phaser.Button {
@@ -15,6 +15,7 @@ class MapButton extends Phaser.Button {
   public arguments:any;
   public file:StorageFile;
   private _firstFrame:number;
+  private _adjusting=false;
 
   constructor(public mapState:MapState, public object:any) {
     super(mapState.game, object.x, object.y);
@@ -51,11 +52,16 @@ class MapButton extends Phaser.Button {
         mapState.joypad.start();
       }).bind(this), 256);
     }
-    if (["setStr", "setInt", "setFloat", "toggle", "adjust"].indexOf(this.command) !== -1) {
+    if (["delete", "set", "setStr", "setInt", "setFloat", "toggle", "adjust"].indexOf(this.command) !== -1) {
       this.file = new StorageFile(this.arguments.file||this.arguments[0]);
       if (this.command === "toggle" && this.file.get(this.arguments.key || this.arguments[1])) {
         this._firstFrame += 3;
         this.frame = this._firstFrame;
+      }
+      if (this.command === "adjust") {
+        this.scale.x = 1;
+        this.setSlider(this.file.get(this.arguments.key || this.arguments[1]));
+        this.input.enableDrag();
       }
     }
     this.onInputOut.add(this.blur, this);
@@ -64,9 +70,18 @@ class MapButton extends Phaser.Button {
     this.onInputUp.add(this.release, this);
   }
 
+  update() {
+    if (this.command === "adjust") {
+      this.setSlider(this.clamp(this.readSlider(), this.arguments.min, this.arguments.max));
+    }
+  }
+
   blur() {
     this.mapState.focusedButton = -1;
     this.frame = this._firstFrame + 0;
+    if (this.command === "adjust") {
+      this.setSlider(this.file.get(this.arguments.key || this.arguments[1]));
+    }
   }
 
   focus() {
@@ -82,24 +97,39 @@ class MapButton extends Phaser.Button {
   }
 
   release() {
-  	var args:any;
+  	var val:any;
     if (this.frame == this._firstFrame + 2) {
       if (this.file) {
         switch (this.command) {
+          case "delete":
+            this.file.delete();
+            break;
+          
+          case "set":
+            val = this.arguments.value || this.arguments[2];
+            this.file.set(this.arguments.key || this.arguments[1], val);
+            break;
+          
           case "setStr":
-            this.file.set(this.arguments.key || this.arguments[1], prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1])));
+            val = prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1]));
+            this.file.set(this.arguments.key || this.arguments[1], val);
             break;
           
           case "setInt":
-            this.file.set(this.arguments.key || this.arguments[1], parseInt(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1]))));
+            val = parseInt(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1])));
+            val = Math.round(this.clamp(val, this.arguments.min, this.arguments.max, this.arguments.step));
+            this.file.set(this.arguments.key || this.arguments[1], val);
             break;
           
           case "setFloat":
-            this.file.set(this.arguments.key || this.arguments[1], parseFloat(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1]))));
+            val = parseFloat(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1])));
+            val = this.clamp(val, this.arguments.min, this.arguments.max, this.arguments.step);
+            this.file.set(this.arguments.key || this.arguments[1], val);
             break;
           
           case "toggle":
-            this.file.set(this.arguments.key || this.arguments[1], !(this.file.get(this.arguments.key || this.arguments[1])));
+            val = !(this.file.get(this.arguments.key || this.arguments[1]));
+            this.file.set(this.arguments.key || this.arguments[1], val);
             if (this.file.get(this.arguments.key || this.arguments[1])) {
               this._firstFrame += 3;
             } else {
@@ -107,8 +137,17 @@ class MapButton extends Phaser.Button {
             }
             break;
           
+          case "adjust":
+            val = this.readSlider();
+            val = this.clamp(val, this.arguments.min, this.arguments.max, this.arguments.step);
+            this.file.set(this.arguments.key || this.arguments[1], val);
+            this.setSlider(val);
+            break;
+          
           default:
-            this.file.set(this.arguments.key || this.arguments[1], JSON.parse(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1]))));
+            val = JSON.parse(prompt(this.arguments.prompt, this.file.get(this.arguments.key || this.arguments[1])));
+            val = this.clamp(val, this.arguments.min, this.arguments.max, this.arguments.step);
+            this.file.set(this.arguments.key || this.arguments[1], val);
             break;
         }
       }
@@ -129,6 +168,30 @@ class MapButton extends Phaser.Button {
         return this.object.properties[key];
       }
     }
+  }
+
+  setSlider(val:number) {
+    var perc = (val-this.arguments.min) / (this.arguments.max - this.arguments.min);
+    this.position.x = this.object.x + perc*this.object.width;
+    this.position.y = this.object.y;
+  }
+
+  readSlider() {
+    var perc = (this.position.x-this.object.x)/this.object.width;
+    return this.arguments.min + perc*(this.arguments.max-this.arguments.min);
+  }
+
+  clamp(val:number, min:number, max:number, step?:number) {
+    if (typeof step === "number") {
+      val = Math.round(val/step)*step;
+    }
+    if (typeof min === "number") {
+      val = Math.max(val, min);
+    }
+    if (typeof max === "number") {
+      val = Math.min(val, max);
+    }
+    return val;
   }
 }
 export = MapButton;

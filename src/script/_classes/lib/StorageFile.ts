@@ -5,7 +5,7 @@ import url = require("url");
 /**
  * StorageFile class
  * 
- * @date 03-06-2016
+ * @date 07-06-2016
  */
 
 var cache = {};
@@ -56,7 +56,7 @@ class StorageFile {
   }
 
   get(key:string) {
-    this.load();
+    // this.load();
     var keys = key.split(".");
     var data = this.data;
     while (keys.length > 1) {

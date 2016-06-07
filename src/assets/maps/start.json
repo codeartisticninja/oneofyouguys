@@ -24,12 +24,14 @@
                  "name":"",
                  "properties":
                     {
-                     "arguments":"tutorial_room",
+                     "arguments":"{\"file\": \"save.json\",\n\"key\": \"room\"}",
+                     "autofocus":true,
                      "command":"goTo"
                     },
                  "propertytypes":
                     {
                      "arguments":"string",
+                     "autofocus":"bool",
                      "command":"string"
                     },
                  "rotation":0,
@@ -46,8 +48,8 @@
                  "name":"",
                  "properties":
                     {
-                     "arguments":"{\"file\": \"save.json\",\n\"key\": \"room\"}",
-                     "autofocus":true,
+                     "arguments":"settings_state",
+                     "autofocus":false,
                      "command":"goTo"
                     },
                  "propertytypes":
@@ -62,50 +64,6 @@
                  "width":192,
                  "x":576,
                  "y":224
-                }, 
-                {
-                 "gid":37,
-                 "height":64,
-                 "id":102,
-                 "name":"",
-                 "properties":
-                    {
-                     "arguments":"[\"\/prefs.json\", \"music.enabled\"]",
-                     "command":"toggle"
-                    },
-                 "propertytypes":
-                    {
-                     "arguments":"string",
-                     "command":"string"
-                    },
-                 "rotation":0,
-                 "type":"button",
-                 "visible":true,
-                 "width":64,
-                 "x":592,
-                 "y":432
-                }, 
-                {
-                 "gid":37,
-                 "height":64,
-                 "id":104,
-                 "name":"",
-                 "properties":
-                    {
-                     "arguments":"[\"\/prefs.json\", \"sfx.enabled\"]",
-                     "command":"toggle"
-                    },
-                 "propertytypes":
-                    {
-                     "arguments":"string",
-                     "command":"string"
-                    },
-                 "rotation":0,
-                 "type":"button",
-                 "visible":true,
-                 "width":64,
-                 "x":688,
-                 "y":432
                 }, 
                 {
                  "gid":28,
@@ -146,11 +104,11 @@
                 {
                  "height":16,
                  "id":83,
-                 "name":"New game",
+                 "name":"Play",
                  "properties":
                     {
-                     "scale":0.5,
-                     "text":"New game"
+                     "scale":1,
+                     "text":"Play"
                     },
                  "propertytypes":
                     {
@@ -162,16 +120,16 @@
                  "visible":true,
                  "width":16,
                  "x":608,
-                 "y":88
+                 "y":80
                 }, 
                 {
                  "height":16,
                  "id":84,
-                 "name":"Continue",
+                 "name":"Settings",
                  "properties":
                     {
                      "scale":0.5,
-                     "text":"Continue"
+                     "text":"Settings"
                     },
                  "propertytypes":
                     {
@@ -209,46 +167,6 @@
                  "width":16,
                  "x":16,
                  "y":48
-                }, 
-                {
-                 "gid":1,
-                 "height":32,
-                 "id":89,
-                 "name":"",
-                 "properties":
-                    {
-                     "enable":false
-                    },
-                 "propertytypes":
-                    {
-                     "enable":"bool"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":608,
-                 "y":416
-                }, 
-                {
-                 "gid":2,
-                 "height":32,
-                 "id":90,
-                 "name":"",
-                 "properties":
-                    {
-                     "enable":false
-                    },
-                 "propertytypes":
-                    {
-                     "enable":"bool"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":704,
-                 "y":416
                 }],
          "opacity":1,
          "type":"objectgroup",

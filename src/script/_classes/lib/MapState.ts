@@ -10,7 +10,7 @@ import StorageFile = require("./StorageFile");
 /**
  * MapState class
  * 
- * @date 06-06-2016
+ * @date 07-06-2016
  */
 
 class MapState extends Phaser.State {
@@ -152,6 +152,9 @@ class MapState extends Phaser.State {
     joypad.update();
     var fb:number = this.focusedButton;
     if (fb > -1) {
+      if (joypad.fire && this.objectTypes[this.buttonType].getAt(fb).command === "adjust") {
+        this.objectTypes[this.buttonType].getAt(fb).position.add(joypad.x*2, joypad.y*2);
+      } else
       if (Math.round(joypad.x) !== 0 || Math.round(joypad.y) !== 0) {
         this.objectTypes[this.buttonType].getAt(fb).blur();
         if (joypad.deltaDown === 1 || joypad.deltaRight === 1) {
