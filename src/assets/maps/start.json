@@ -167,6 +167,49 @@
                  "width":16,
                  "x":16,
                  "y":48
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":112,
+                 "name":"",
+                 "properties":
+                    {
+                     "arguments":"http:\/\/codeartistic.ninja\/",
+                     "command":"url"
+                    },
+                 "propertytypes":
+                    {
+                     "arguments":"string",
+                     "command":"string"
+                    },
+                 "rotation":0,
+                 "type":"button",
+                 "visible":true,
+                 "width":304,
+                 "x":472,
+                 "y":440
+                }, 
+                {
+                 "height":16,
+                 "id":108,
+                 "name":"codeartistic.ninja",
+                 "properties":
+                    {
+                     "scale":0.5,
+                     "text":"codeartistic.ninja"
+                    },
+                 "propertytypes":
+                    {
+                     "scale":"float",
+                     "text":"string"
+                    },
+                 "rotation":0,
+                 "type":"text",
+                 "visible":true,
+                 "width":16,
+                 "x":480,
+                 "y":416
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -175,7 +218,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":108,
+ "nextobjectid":113,
  "orientation":"orthogonal",
  "properties":
     {
