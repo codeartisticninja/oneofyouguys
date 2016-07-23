@@ -10,7 +10,7 @@ import StorageFile = require("./StorageFile");
 /**
  * MapState class
  * 
- * @date 07-06-2016
+ * @date 23-07-2016
  */
 
 class MapState extends Phaser.State {
@@ -145,6 +145,9 @@ class MapState extends Phaser.State {
     }
     if (this.getProperty("musicKey")) {
       this.gameApp.playMusic(this.getProperty("musicKey"), this.getProperty("musicLoop"));
+    }
+    if (window["_paq"]) {
+      window["_paq"].push(['trackEvent', document.title, this.key]);
     }
   };
 
