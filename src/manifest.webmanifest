@@ -1,0 +1,15 @@
+  {
+    "name": "I'm one of you guys now",
+    "description": "My first game release and entry for the Ludum Dare 35.",
+    "start_url": "./?fsapp",
+    "display": "fullscreen",
+    "background_color": "#000",
+    "orientation": "landscape",
+    "icons": [
+      {
+        "src": "images/cover.png",
+        "sizes": "800x450",
+        "type": "image/png"
+      }
+    ]
+  }
